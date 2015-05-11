@@ -103,7 +103,8 @@ public final class SafeCloseSmtpServer implements Runnable {
 	/**
 	 * Main loop of the SMTP server.
 	 */
-	@Override
+    @SuppressWarnings("resource")
+    @Override
 	public void run() {
 		stopped = false;
 		try {

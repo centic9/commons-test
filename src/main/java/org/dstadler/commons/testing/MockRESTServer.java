@@ -97,11 +97,11 @@ public class MockRESTServer implements Closeable {
 	 * @throws IOException
 	 *             If no available port is found.
 	 */
-	private static final int getNextFreePort() throws IOException {
+    private static final int getNextFreePort() throws IOException {
 		for (int port = PORT_RANGE_START; port < PORT_RANGE_END; port++) {
-			ServerSocket sock;
 			try {
-				sock = new ServerSocket(port);
+			    @SuppressWarnings("resource")
+                ServerSocket sock = new ServerSocket(port);
 				sock.close();
 				//
 				return port;

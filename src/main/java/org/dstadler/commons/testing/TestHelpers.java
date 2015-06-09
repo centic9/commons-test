@@ -408,7 +408,7 @@ public class TestHelpers {
 			Enum.valueOf(enumclass, "nonexistingenumelement");
 			fail("Should catch exception IllegalArgumentException when calling Enum.valueOf() with incorrect enum-value!");
 		} catch (IllegalArgumentException e) {
-			assertTrue(e.getMessage(), e.getMessage().contains("No enum const class"));
+			assertTrue(e.getMessage(), e.getMessage().contains("No enum"));
 		}
 	}
 

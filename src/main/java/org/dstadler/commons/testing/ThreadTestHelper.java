@@ -226,12 +226,6 @@ public class ThreadTestHelper {
 		void doEnd(int threadnum) throws Exception;
 	}
 
-	public void testDummy() {
-		// small empty test to not fail if this class is executed as test case
-		// by
-		// Hudson/Sonar
-	}
-
 	/**
 	 * Wait for all threads with the specified name to finish, i.e. to not appear in the
 	 * list of running threads any more.

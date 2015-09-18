@@ -346,8 +346,6 @@ public class TestHelpers {
 	 *
 	 * @param obj
 	 *            An Object that override the hasCode() method.
-	 *
-	 * @throws Exception
 	 */
 	public static void HashCodeTest(final Object obj, final Object equ) {
 		assertFalse(	// NOPMD
@@ -419,8 +417,8 @@ public class TestHelpers {
 	 *
 	 * This will provide a useful error message in case of failure.
 	 *
-	 * @param str
-	 * @param search
+	 * @param throwable The Exception to look at.
+	 * @param searches A list of one or more search-terms, all of them need to be found in the exception-text.
 	 */
 	public static void assertContains(final Throwable throwable, final String... searches) {
 		assertNotNull("Cannot verify message contents of a Throwable when it is null.", throwable);
@@ -440,8 +438,9 @@ public class TestHelpers {
 	 *
 	 * This will provide a useful error message in case of failure.
 	 *
-	 * @param str
-	 * @param search
+	 * @param msg A descriptive message which provides more information about a potential assertion failure.
+	 * @param throwable The Exception to look at.
+	 * @param searches A list of one or more search-terms, all of them need to be found in the exception-text.
 	 */
 	public static void assertContains(final String msg, final Throwable throwable, final String... searches) {
 		assertNotNull("Cannot verify message contents of a Throwable when it is null.", throwable);
@@ -461,8 +460,8 @@ public class TestHelpers {
 	 *
 	 * This will provide a useful error message in case of failure.
 	 *
-	 * @param str
-	 * @param search
+	 * @param str A string of text on which the assertions are applied.
+	 * @param searches A list of one or more search-terms, all of them need to be found in the text.
 	 */
 	public static void assertContains(final String str, final String... searches) {
 		assertNotNull("Cannot assertContains on a null-string", str);
@@ -478,8 +477,9 @@ public class TestHelpers {
 	 *
 	 * This will provide a useful error message in case of failure.
 	 *
-	 * @param str
-	 * @param search
+	 * @param msg A descriptive message which provides more information about a potential assertion failure.
+	 * @param str A string of text on which the assertions are applied.
+	 * @param searches A list of one or more search-terms, none of them should be found in the text.
 	 */
 	public static void assertContainsMsg(final String msg, final String str, final String... searches) {
 		assertNotNull("Cannot assertContains on a null-string", str);
@@ -495,8 +495,8 @@ public class TestHelpers {
 	 *
 	 * This will provide a useful error message in case of failure.
 	 *
-	 * @param str
-	 * @param search
+	 * @param str A string of text on which the assertions are applied.
+	 * @param searches A list of one or more search-terms, none of them should be found in the text.
 	 */
 	public static void assertNotContains(final String str, final String... searches) {
 		assertNotNull("Cannot assertNotContains on a null-string", str);
@@ -513,8 +513,9 @@ public class TestHelpers {
 	 *
 	 * This will provide a useful error message in case of failure.
 	 *
-	 * @param str
-	 * @param search
+	 * @param msg A descriptive message which provides more information about a potential assertion failure.
+	 * @param str A string of text on which the assertions are applied.
+	 * @param searches A list of one or more search-terms, none of them should be found in the text.
 	 */
 	public static void assertNotContainsMsg(final String msg, final String str, final String... searches) {
 		assertNotNull("Cannot assertNotContains on a null-string", str);
@@ -532,7 +533,7 @@ public class TestHelpers {
 	 *
 	 *  @param test A Runnable that executes the test-code
 	 *  @param className The name that is used for the logger that should be adjusted
-	 *  @param level The actual log-level that should be used, e.g. Level.FINE
+	 *  @param levels The actual log-levels that should be used, e.g. Level.FINE
 	 */
 	public static void runTestWithDifferentLogLevel(final Runnable test, final String className, final Level... levels) {
 		Logger localLogger = Logger.getLogger(className);

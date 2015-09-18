@@ -11,10 +11,10 @@ public class PrivateConstructorCoverage {
 	/**
 	 * Helper method for removing coverage-reports for classes with only static
 	 * methods
-	 * <p/>
+	 *
 	 * see for related EMMA ticket
 	 * http://sourceforge.net/tracker/index.php?func=
-	 * detail&aid=1173251&group_id=108932&atid=651900
+	 * detail&amp;aid=1173251&amp;group_id=108932&amp;atid=651900
 	 *
 	 * add this to the test case for any class that has only static methods
 	 * where coverage reports the default constructor as not covered
@@ -24,9 +24,9 @@ public class PrivateConstructorCoverage {
 	 * <code>
 
 	// helper method to get coverage of the unused constructor
-	@Test
+	{@literal @}Test
 	public void testPrivateConstructor() throws Exception {
-		org.dstadler.commons.testing.PrivateConstructorCoverage.executePrivateConstructor(<yourclass>.class);
+		org.dstadler.commons.testing.PrivateConstructorCoverage.executePrivateConstructor(yourclass.class);
 	}
 
 	 </code>

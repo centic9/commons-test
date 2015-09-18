@@ -24,18 +24,18 @@ import org.dstadler.commons.logging.jdk.LoggerFactory;
  * Sample usage is as follows:
  *
  * <code>
-    @Test
+    {@literal @}Test
     public void testMultipleThreads() throws Throwable {
         ThreadTestHelper helper =
             new ThreadTestHelper(NUMBER_OF_THREADS, NUMBER_OF_TESTS);
 
         helper.executeTest(new ThreadTestHelper.TestRunnable() {
-            @Override
+            {@literal @}Override
             public void doEnd(int threadnum) throws Exception {
                 // do stuff at the end ...
             }
 
-            @Override
+            {@literal @}Override
             public void run(int threadnum, int iter) throws Exception {
                 // do the actual threaded work ...
             }

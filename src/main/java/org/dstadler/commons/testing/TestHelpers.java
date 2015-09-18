@@ -2,6 +2,7 @@ package org.dstadler.commons.testing;
 
 import static org.junit.Assert.*;
 
+import java.awt.GraphicsEnvironment;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -12,6 +13,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.junit.Assume;
 
 /**
  * Copied from project test.util to use it in independent projects from here.
@@ -575,5 +577,14 @@ public class TestHelpers {
         } finally {
         	conn.disconnect();
         }
+	}
+
+	/**
+	 * Helper method which uses assume to not run tests if the current JVM runs in headless mode.
+	 */
+	public static void assumeCanShowDialogs() {
+		GraphicsEnvironment.getLocalGraphicsEnvironment();
+		Assume.assumeFalse("Can not run some tests when tests are executed in headless mode",
+				GraphicsEnvironment.isHeadless());
 	}
 }

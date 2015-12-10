@@ -39,7 +39,7 @@ public class ConcurrentJunitRunner extends BlockJUnit4ClassRunner {
                 try {
                     while (!tasks.isEmpty())
                         tasks.remove(completionService.take());
-                } catch (InterruptedException e) {
+                } catch (@SuppressWarnings("unused") InterruptedException e) {
                     Thread.currentThread().interrupt();
                 } finally {
                     while (!tasks.isEmpty())

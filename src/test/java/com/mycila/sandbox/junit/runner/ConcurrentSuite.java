@@ -69,7 +69,7 @@ public final class ConcurrentSuite extends Suite {
                 try {
                     while (!tasks.isEmpty())
                         tasks.remove(completionService.take());
-                } catch (InterruptedException e) {
+                } catch (@SuppressWarnings("unused") InterruptedException e) {
                     Thread.currentThread().interrupt();
                 } finally {
                     while (!tasks.isEmpty())

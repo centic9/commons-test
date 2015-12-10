@@ -107,7 +107,7 @@ public class MockRESTServer implements Closeable {
 				return port;
 			} catch (IOException e) {
 				// seems to be taken, try next one
-				log.warning("Port " + port + " seems to be used already, trying next one...");
+				log.warning("Port " + port + " seems to be used already, trying next one: " + e);
 			}
 		}
 

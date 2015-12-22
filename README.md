@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/centic9/commons-test.svg)](https://travis-ci.org/centic9/commons-test)
+[![Build Status](https://travis-ci.org/centic9/commons-test.svg)](https://travis-ci.org/centic9/commons-test) [![Gradle Status](https://gradleupdate.appspot.com/centic9/commons-test/status.svg?branch=master)](https://gradleupdate.appspot.com/centic9/commons-test/status)
 
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.dstadler/commons-test/badge.svg?style=flat)](https://maven-badges.herokuapp.com/maven-central/org.dstadler/commons-test) [![Maven Central](https://img.shields.io/maven-central/v/org.dstadler/commons-test.svg)](https://maven-badges.herokuapp.com/maven-central/org.dstadler/commons-test)
 

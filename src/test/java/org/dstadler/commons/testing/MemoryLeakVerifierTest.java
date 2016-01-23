@@ -5,29 +5,25 @@ import org.junit.Test;
 public class MemoryLeakVerifierTest {
 	@Test
 	public void testNoMemoryLeak() {
-		Object obj = new Object();
+		MemoryLeakVerifier verifier = new MemoryLeakVerifier();
+		verifier.addObject(new Object());
+		verifier.addObject(new Object());
 
-		MemoryLeakVerifier verifier = new MemoryLeakVerifier(obj);
-
-		// unset local reference
-		obj = null;
-
-		verifier.assertGarbageCollected("obj");
+		verifier.assertGarbageCollected();
 	}
 
 	@Test
 	public void testWithMemoryLeak() {
 		Object obj = new Object();
 
-		MemoryLeakVerifier verifier = new MemoryLeakVerifier(obj);
+		MemoryLeakVerifier verifier = new MemoryLeakVerifier();
 
-		// keep local reference
-		//obj = null;
+		verifier.addObject(obj);
 
 		try {
-			verifier.assertGarbageCollected("obj", 3);
+			verifier.assertGarbageCollected(3);
 		} catch (AssertionError e) {
-			TestHelpers.assertContains(e, "obj: object should not exist");
+			TestHelpers.assertContains(e, "Object should not exist");
 		}
 	}
 }

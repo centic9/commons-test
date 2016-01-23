@@ -45,7 +45,7 @@ public class MockSMTPServer {
 	 * Start the server, port is chosen automatically in the range of {@value #PORT_RANGE_START} and
 	 * {@value #PORT_RANGE_END}.
 	 *
-	 * @throws IOException
+	 * @throws IOException if no port is available
 	 */
 	public void start() throws IOException {
 		// try to automatically retrieve a port

@@ -13,12 +13,12 @@ import java.util.List;
  *
  * 	private final MemoryLeakVerifier verifier = new MemoryLeakVerifier();
 
-	@After
+	{@literal}After
 	public void tearDown() {
 		verifier.assertGarbageCollected();
 	}
 
-	@Test
+	{@literal}Test
 	public void someTest() {
 		...
 		verifier.addObject(object);

@@ -70,8 +70,11 @@ public class MockRESTServer implements Closeable {
 	 * The server tries ports in the range listed above to find one that can be used. If none is usable, a IOException
 	 * is thrown.
 	 *
-	 * @throws IOException
-	 *             If instantiating the Server failed.
+	 * @param response A {@link Runnable} which is called whenever the HTTP server is called.
+	 * @param status The HTTP status to return, see NanoHTTPD.HTTP_...
+	 * @param mime The mime-type to set for the response, see NanoHTTPD.MIME_...
+	 * @param msg The actual message to return when the HTTP server is called.
+	 * @throws IOException If instantiating the Server failed.
 	 */
 	public MockRESTServer(final Runnable response, final String status, final String mime, final String msg) throws IOException {
 		// first try to get the next free port

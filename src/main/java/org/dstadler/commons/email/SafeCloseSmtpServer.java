@@ -128,7 +128,7 @@ public final class SafeCloseSmtpServer implements Runnable {
 					Socket socket = null;
 					try {
 						socket = serverSocket.accept();
-					} catch (Exception e) {
+					} catch (@SuppressWarnings("unused") Exception e) {
 						continue; // Non-blocking socket timeout occurred: try accept() again
 					}
 

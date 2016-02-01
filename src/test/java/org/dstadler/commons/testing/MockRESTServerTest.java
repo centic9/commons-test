@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import java.io.IOException;
 import java.net.InetAddress;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Logger;
 
 import org.dstadler.commons.http.NanoHTTPD;
@@ -84,7 +85,7 @@ public class MockRESTServerTest {
 			assertTrue("Host: " + hostname + ":" + server.getPort() + ": Had: " + check, check);
 
 			String checkStr = UrlUtils.retrieveData("http://" + hostname + ":" + server.getPort(), 500);
-			assertTrue("Host: " + hostname + ":" + server.getPort() + ": Had: " + check, checkStr.length() > 0);
+			assertTrue("Host: " + hostname + ":" + server.getPort() + ": Had: " + checkStr, checkStr.length() > 0);
 
 			String data = UrlUtils.retrieveData("http://" + hostname + ":" + server.getPort(), 500);
 			assertEquals("Host: " + hostname + ":" + server.getPort() + ": Had: " + data, "OK", data);
@@ -117,5 +118,40 @@ public class MockRESTServerTest {
 				assertEquals("<html>2</html>", data);
 			}
 		}
+	}
+
+	@Test
+	public void testExhaustPorts() throws IOException {
+		MockRESTServer[] servers = new MockRESTServer[100];
+		try {
+			for (int i = 0; i < 100; i++) {
+				servers[i] = new MockRESTServer(NanoHTTPD.HTTP_OK, NanoHTTPD.MIME_HTML, "<html>" + i + "</html>");
+			}
+		} catch (IOException e) {
+			TestHelpers.assertContains(e, "No free port found");
+		}
+
+		for(int i = 0;i < 100;i++) {
+			if(servers[i] != null) {
+				servers[i].close();
+			}
+		}
+	}
+
+	@Test
+	public void testWithRunnable() throws IOException {
+		final AtomicBoolean called = new AtomicBoolean();
+		try (MockRESTServer server = new MockRESTServer(new Runnable() {
+			@Override
+			public void run() {
+				assertFalse("Should be called exactly once, but was already called before", called.get());
+				called.set(true);
+			}
+		}, NanoHTTPD.HTTP_OK, NanoHTTPD.MIME_HTML, "<html>1</html>")) {
+			String data = UrlUtils.retrieveData("http://localhost:" + server.getPort(), 10_000);
+			assertEquals("<html>1</html>", data);
+		}
+
+		assertTrue("Should be called now", called.get());
 	}
 }

@@ -9,6 +9,7 @@ import java.util.logging.Logger;
 import org.dstadler.commons.http.NanoHTTPD;
 import org.dstadler.commons.logging.jdk.LoggerFactory;
 import org.dstadler.commons.net.UrlUtils;
+import org.junit.After;
 import org.junit.Test;
 
 
@@ -20,6 +21,11 @@ import org.junit.Test;
  */
 public class MockRESTServerTest {
     private static final Logger log = LoggerFactory.make();
+
+	@After
+	public void tearDown() throws InterruptedException {
+		ThreadTestHelper.waitForThreadToFinishSubstring("NanoHTTP");
+	}
 
 	@Test
 	public void testLocalhost() throws IOException {
@@ -95,6 +101,21 @@ public class MockRESTServerTest {
 			assertTrue("Host: localhost: Had: " + check, check);
 		} finally {
 			server.stop();
+		}
+	}
+
+	@Test
+	public void testStartupTwice() throws IOException {
+		try (MockRESTServer server = new MockRESTServer(NanoHTTPD.HTTP_OK, NanoHTTPD.MIME_HTML, "<html>1</html>")) {
+			try (MockRESTServer server2 = new MockRESTServer(NanoHTTPD.HTTP_OK, NanoHTTPD.MIME_HTML, "<html>2</html>")) {
+				assertTrue(server.getPort() != server2.getPort());
+
+				String data = UrlUtils.retrieveData("http://localhost:" + server.getPort(), 10_000);
+				assertEquals("<html>1</html>", data);
+
+				data = UrlUtils.retrieveData("http://localhost:" + server2.getPort(), 10_000);
+				assertEquals("<html>2</html>", data);
+			}
 		}
 	}
 }

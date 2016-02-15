@@ -31,8 +31,11 @@ public class PrivateConstructorCoverage {
 
 	 </code>
 	 *
+	 * @param <T> The type of class to cover.
 	 * @param targetClass The class to cover.
 	 * @return The constructed instance if needed for further testing.
+	 *
+	 * @throws Exception If invoking the default constructor fails for any reason.
 	 */
 	public static <T> T executePrivateConstructor(final Class<T> targetClass) throws Exception {
         if(Modifier.isAbstract(targetClass.getModifiers())) {

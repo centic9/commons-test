@@ -104,12 +104,14 @@ public class TestHelpers {
 	 *
 	 * This can be used to verify basic assertions on an implementation of Comparable.
 	 *
+	 * @param <T> The type of object to test compareTo() on
 	 * @param obj
 	 *            The object to use for compareTo()
 	 * @param equal
 	 *            An object which is equal to "obj", but not the same object!
 	 * @param notequal
 	 *            An object which is not equal to "obj"
+	 * @param notEqualIsLess True if the notequal object should be less than obj.
 	 */
 	public static <T extends Comparable<T>> void CompareToTest(final T obj, final T equal,
 			final T notequal, boolean notEqualIsLess) {
@@ -194,6 +196,7 @@ public class TestHelpers {
 	 *
 	 * This can be used.
 	 *
+	 * @param <T> The type of Comparator to test
 	 * @param comparator
 	 *            The implementation of the Comparator.
 	 * @param obj
@@ -202,6 +205,7 @@ public class TestHelpers {
 	 *            An object which is equal to "obj", but not the same object!
 	 * @param notequal
 	 *            An object which is not equal to "obj"
+	 * @param notEqualIsLess True if the notequal object should be less than obj.
 	 */
 	public static <T> void ComparatorTest(final Comparator<T> comparator, final T obj, final T equal,
 			final T notequal, boolean notEqualIsLess) {
@@ -318,6 +322,7 @@ public class TestHelpers {
 	 *
 	 * @param obj
 	 *            The object to test clone for.
+	 * @throws Exception Any exception thrown by invoking clone() on obj via reflection.
 	 */
 	public static void CloneTest(final Cloneable obj) throws Exception {
 		final Method m = obj.getClass().getMethod("clone", new Class[] {});
@@ -346,6 +351,7 @@ public class TestHelpers {
 	 *
 	 * @param obj
 	 *            An Object that override the hasCode() method.
+	 * @param equ An Object which should return the same hashCode() as obj.
 	 */
 	public static void HashCodeTest(final Object obj, final Object equ) {
 		assertFalse(	// NOPMD
@@ -378,14 +384,14 @@ public class TestHelpers {
 	/**
 	 * Verifies certain assumptions on an Enum class.
 	 *
-	 * @param <T>
-	 * @param enumtype
-	 * @param enumclass
-	 * @param element
+	 * @param <T> The type of enum to test.
+	 * @param enumtype The enum-class to test.
+	 * @param enumclass The class-object for the enum-class to test.
+	 * @param element A String-element that is expected to match one entry in the enum via Enum.valueOf() calls.
 	 *
-	 * @throws NoSuchMethodException
-	 * @throws InvocationTargetException
-	 * @throws IllegalAccessException
+	 * @throws NoSuchMethodException If the provided class does not have a static method "values"
+	 * @throws InvocationTargetException If invoking the static method "values" causes an exception
+	 * @throws IllegalAccessException If invoking the static method "values" causes an exception
 	 */
 	public static <T extends Enum<T>> void EnumTest(Enum<T> enumtype, Class<T> enumclass, String element)
 			throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
@@ -554,10 +560,9 @@ public class TestHelpers {
 	 *
 	 * This is used to stop tests early if required internet access is not available.
 	 *
-	 * @param urlString
-	 * @param timeout
-	 * @throws IOException
-	 * @author dominik.stadler
+	 * @param urlString The URL that should be verified.
+	 * @param timeout The timeout for network calls in milliseconds.
+	 * @throws IOException If an error occurs while contacting the given URL.
 	 */
 	public static void assertURLWorks(String urlString, int timeout) throws IOException {
 		URL url = new URL(urlString);

@@ -104,6 +104,7 @@ public class ThreadTestHelper {
 	 * This methods executes the passed {@link Callable}. The number of executions depends
 	 * on the given runs number.
 	 *
+	 * @param <T> The return-type for the {@link Callable} testable.
 	 * @param testable test {@link Callable} to execute
 	 * @param runs defines how many times the passed {@link Callable} is executed
 	 * @return the results of the the execution of the passed {@link Callable}
@@ -212,6 +213,7 @@ public class ThreadTestHelper {
 		 * @param iter
 		 *        The count of how many times this thread executed the
 		 *        method
+		 * @throws Exception Thrown on any failure during running the test
 		 *
 		 * @see java.lang.Thread#run()
 		 */
@@ -222,6 +224,10 @@ public class ThreadTestHelper {
 		 *
 		 * This method should throw an Exception if any check fails at this
 		 * point.
+		 *
+		 * @param threadnum
+		 *        The number of the thread executing this doEnd()
+		 * @throws Exception Thrown on any failure during running the test
 		 */
 		void doEnd(int threadnum) throws Exception;
 	}
@@ -230,10 +236,9 @@ public class ThreadTestHelper {
 	 * Wait for all threads with the specified name to finish, i.e. to not appear in the
 	 * list of running threads any more.
 	 *
-	 * @param name
+	 * @param name The exact name of the Thread to wait for.
 	 *
-	 * @throws InterruptedException
-	 * @author dominik.stadler
+	 * @throws InterruptedException Thrown by joining threads with the given name
 	 */
 	public static void waitForThreadToFinish(final String name) throws InterruptedException {
 		int count = Thread.currentThread().getThreadGroup().activeCount();
@@ -252,10 +257,9 @@ public class ThreadTestHelper {
 	 * Wait for thread whose name contain the specified string to finish, i.e. to not appear in the
 	 * list of running threads any more.
 	 *
-	 * @param name
+	 * @param name The string which is matched against thread-names via thread.getName().contains(name)
 	 *
-	 * @throws InterruptedException
-	 * @author dominik.stadler
+	 * @throws InterruptedException Thrown by joining threads with the given name
 	 */
 	public static void waitForThreadToFinishSubstring(final String name) throws InterruptedException {
 		int count = Thread.currentThread().getThreadGroup().activeCount();

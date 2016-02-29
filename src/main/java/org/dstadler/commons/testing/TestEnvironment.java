@@ -165,7 +165,7 @@ public class TestEnvironment {
 						builder.append("Had leftover sub-files/directories: ").append(Arrays.toString(subFile.list())).append("\n");
 					}
 				}
-				throw new IOException(builder.toString(), e);
+				throw new IOException(builder.toString(), e1);
 			}
 		}
 	}

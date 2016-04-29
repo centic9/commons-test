@@ -2,6 +2,11 @@ package org.dstadler.commons.testing;
 
 import org.junit.Test;
 
+import java.io.File;
+
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 public class MemoryLeakVerifierTest {
 	@Test
 	public void testNoMemoryLeak() {
@@ -17,13 +22,37 @@ public class MemoryLeakVerifierTest {
 		Object obj = new Object();
 
 		MemoryLeakVerifier verifier = new MemoryLeakVerifier();
+		verifier.setHeapDump(false);
 
 		verifier.addObject(obj);
 
 		try {
 			verifier.assertGarbageCollected(3);
+			fail("Should report a memory leak here");
 		} catch (AssertionError e) {
 			TestHelpers.assertContains(e, "Object should not exist");
+		}
+	}
+
+	@Test
+	public void testWithMemoryLeakAndHeapDump() {
+		Object obj = new Object();
+
+		MemoryLeakVerifier verifier = new MemoryLeakVerifier();
+		verifier.setHeapDump(true);
+
+		verifier.addObject(obj);
+
+		try {
+			verifier.assertGarbageCollected(3);
+			fail("Should report a memory leak here");
+		} catch (AssertionError e) {
+			TestHelpers.assertContains(e, "Object should not exist");
+
+			final File heapDumpFile = new File(MemoryLeakVerifier.HEAP_DUMP_FILE_NAME);
+
+			assertTrue("HeapDumpFile was not found at " + heapDumpFile.getAbsolutePath(), heapDumpFile.exists());
+			assertTrue("HeapDumpFile at " + heapDumpFile.getAbsolutePath() + " could not be deleted", heapDumpFile.delete());
 		}
 	}
 }

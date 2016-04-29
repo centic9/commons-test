@@ -2,6 +2,7 @@ package org.dstadler.commons.testing;
 
 import static org.junit.Assert.assertNull;
 
+import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,15 +29,25 @@ import java.util.List;
  * This will verify at the end of the test if the object is actually removed by the
  * garbage collector or if it lingers in memory for some reason.
  *
+ * By default, a heap dump will be written to the file 'MemoryLeakVerifier.hprof' in the
+ * current directory. This can be disable via setHeapDump(false)
+ *
  * Idea taken from http://stackoverflow.com/a/7410460/411846
  */
 public class MemoryLeakVerifier {
 	private static final int MAX_GC_ITERATIONS = 50;
 	private static final int GC_SLEEP_TIME     = 100;
 
+	protected static final String HEAP_DUMP_FILE_NAME = "MemoryLeakVerifier.hprof";
+
 	private final List<WeakReference<Object>> references = new ArrayList<>();
+	private boolean dumpHeap = true;
 
 	public MemoryLeakVerifier() {
+	}
+
+	public void setHeapDump(boolean dumpHeap) {
+		this.dumpHeap = dumpHeap;
 	}
 
 	public void addObject(Object object) {
@@ -58,16 +69,19 @@ public class MemoryLeakVerifier {
 
 	/**
 	 * Used only for testing the class itself where we would like to fail faster than 5 seconds
-	 * @param name
-	 * @param maxIterations
+	 * @param maxIterations The number of times a GC will be invoked until a possible memory leak is reported
 	 */
 	void assertGarbageCollected(int maxIterations) {
-		for(WeakReference<Object> ref : references) {
-			assertGarbageCollected(ref, maxIterations);
+		try {
+			for(WeakReference<Object> ref : references) {
+				assertGarbageCollected(ref, maxIterations, dumpHeap);
+			}
+		} catch (InterruptedException e) {
+			// just ensure that we quickly return when the thread is interrupted
 		}
 	}
 
-	private static void assertGarbageCollected(WeakReference<Object> ref, int maxIterations) {
+	private static void assertGarbageCollected(WeakReference<Object> ref, int maxIterations, boolean dumpHeap) throws InterruptedException {
 	    Runtime runtime = Runtime.getRuntime();
 	    for (int i = 0; i < maxIterations; i++) {
 	        runtime.runFinalization();
@@ -76,15 +90,19 @@ public class MemoryLeakVerifier {
 	            break;
 
 	        // Pause for a while and then go back around the loop to try again...
-	        try {
-	            //EventQueue.invokeAndWait(Procedure.NoOp); // Wait for the AWT event queue to have completed processing
-	            Thread.sleep(GC_SLEEP_TIME);
-	        } catch (@SuppressWarnings("unused") InterruptedException e) {
-	            // Ignore any interrupts and just try again...
-	        }
+			//EventQueue.invokeAndWait(Procedure.NoOp); // Wait for the AWT event queue to have completed processing
+			Thread.sleep(GC_SLEEP_TIME);
 	    }
 
-	    assertNull("Object should not exist after " + MAX_GC_ITERATIONS + " collections, but still had: " + ref.get(),
+		if(dumpHeap && ref.get() != null) {
+			// dumping heap
+			try {
+				HeapDump.dumpHeap(HEAP_DUMP_FILE_NAME, true);
+			} catch (IOException e) {
+				throw new IllegalStateException(e);
+			}
+		}
+	    assertNull("Object should not exist after " + MAX_GC_ITERATIONS + " collections, but still had: " + ref.get() + (dumpHeap ? ", a heapdump was written to " + HEAP_DUMP_FILE_NAME : ""),
 	    		ref.get());
 	}
 }

@@ -8,10 +8,12 @@ It covers areas that I miss in JUnit itself e.g. for verifying compare()/hashCod
 
 ## Contents
  
-* MockSMTPServer - simluate an SMTP Server for testing code which sends emails
-* MockRESTServer - simluate a HTTP Server for testing code which accesses other systems, e.g. to mock REST interfaces in tests
+* MockSMTPServer - simulate an SMTP Server for testing code which sends emails
+* MockRESTServer - simulate a HTTP Server for testing code which accesses other systems, e.g. to mock REST interfaces in tests
 * TestHelpers - small utilities for testing things like equals(), hashCode(), toString(), compare() and implementations of Comparator, they ensure some things that the Java spec mandates
 * ThreadTestHelpers - easily run unit tests multiple times in parallel to ensure the code does not contain hidden race conditions
+* MemoryLeakVerifier - a simple way of adding memory leak assertions to unit tests
+* TestEnvironment - handling temporary files/directories in a clean way, ensure that files are not locked any more at the end of the test
 
 ## Use it
 

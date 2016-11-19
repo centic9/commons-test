@@ -10,8 +10,8 @@ apply plugin: 'maven'
 apply plugin: 'signing'
 
 sourceCompatibility = 1.7
-group = "org.dstadler"
-archivesBaseName = "commons-test"
+group = 'org.dstadler'
+archivesBaseName = 'commons-test'
 
 repositories {
 	mavenCentral()
@@ -19,12 +19,12 @@ repositories {
 
 eclipse {
 	project {
-		name = "commons-test.git"
+		name = 'commons-test.git'
 	}
 }
 
 dependencies {
-	compile 'org.apache.commons:commons-lang3:3.4'
+	compile 'org.apache.commons:commons-lang3:3.5'
 	compile 'org.dstadler:commons-dost:1.0.0.20'
 
 	// dumbster is somewhat broken, but we use it in SafeCloseSmtpServer...
@@ -34,7 +34,7 @@ dependencies {
 	compile 'dumbster:dumbster:1.6'
 
 	// for TestHelpers we need junit during normal compile...
-	compile "junit:junit:[4.12,)"
+	compile 'junit:junit:[4.12,)'
 
 	testCompile 'org.apache.commons:commons-email:1.4'
 }
@@ -82,7 +82,7 @@ test {
 }
 
 jacoco {
-	toolVersion = '0.7.6.201602180812'
+	toolVersion = '0.7.7.201606060606'
 }
 
 jacocoTestReport {
@@ -110,11 +110,11 @@ signing {
 }
 
 //provide defaults so we do not need to specify them always
-if (!project.hasProperty("ossrhUsername")) {
-    ext.ossrhUsername = ""
+if (!project.hasProperty('ossrhUsername')) {
+    ext.ossrhUsername = ''
 }
-if (!project.hasProperty("ossrhPassword")) {
-    ext.ossrhPassword = ""
+if (!project.hasProperty('ossrhPassword')) {
+    ext.ossrhPassword = ''
 }
 
 uploadArchives {
@@ -122,11 +122,11 @@ uploadArchives {
     mavenDeployer {
       beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
 
-      repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+      repository(url: 'https://oss.sonatype.org/service/local/staging/deploy/maven2/') {
         authentication(userName: ossrhUsername, password: ossrhPassword)
       }
 
-      snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+      snapshotRepository(url: 'https://oss.sonatype.org/content/repositories/snapshots/') {
         authentication(userName: ossrhUsername, password: ossrhPassword)
       }
 

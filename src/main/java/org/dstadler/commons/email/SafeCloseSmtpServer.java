@@ -1,5 +1,4 @@
-/*****************************************************
- * /*
+/*
  * Dumbster - a dummy SMTP server
  * Copyright 2004 Jason Paul Kitchen
  *
@@ -23,6 +22,8 @@
 
 package org.dstadler.commons.email;
 
+import com.dumbster.smtp.*;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -36,13 +37,6 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Semaphore;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import com.dumbster.smtp.SimpleSmtpServer;
-import com.dumbster.smtp.SmtpActionType;
-import com.dumbster.smtp.SmtpMessage;
-import com.dumbster.smtp.SmtpRequest;
-import com.dumbster.smtp.SmtpResponse;
-import com.dumbster.smtp.SmtpState;
 
 /**
  * Dummy SMTP server for testing purposes.
@@ -125,7 +119,7 @@ public final class SafeCloseSmtpServer implements Runnable {
 
 				try {
 					// Start server socket and listen for client connections
-					Socket socket = null;
+					final Socket socket;
 					try {
 						socket = serverSocket.accept();
 					} catch (@SuppressWarnings("unused") Exception e) {
@@ -133,7 +127,7 @@ public final class SafeCloseSmtpServer implements Runnable {
 					}
 
 					// Get the input and output streams
-					BufferedReader input = new BufferedReader(new InputStreamReader(socket.getInputStream()));         // NOSONAR - test class works only locally anyway
+					BufferedReader input = new BufferedReader(new InputStreamReader(socket.getInputStream(), "UTF-8"));         // NOSONAR - test class works only locally anyway
 					PrintWriter out = new PrintWriter(socket.getOutputStream());       // NOSONAR - test class works only locally anyway
 
 					synchronized (this) {
@@ -153,7 +147,7 @@ public final class SafeCloseSmtpServer implements Runnable {
 				}
 			}
 		} catch (Exception e) {
-			/** @todo Should throw an appropriate exception here. */
+			// TODO: Should throw an appropriate exception here
 			log.log(Level.SEVERE, "Caught exception: ", e);
 		} finally {
 			if (serverSocket != null) {
@@ -199,7 +193,6 @@ public final class SafeCloseSmtpServer implements Runnable {
 	 * @param out output stream
 	 * @param input input stream
 	 * @return List of SmtpMessage
-	 * @throws IOException
 	 */
 	private List<SmtpMessage> handleTransaction(PrintWriter out, BufferedReader input) throws IOException {
 		// Initialize the state machine

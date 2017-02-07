@@ -4,13 +4,14 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.util.Properties;
+import java.util.concurrent.Callable;
 import java.util.logging.Logger;
 
 import org.dstadler.commons.http.NanoHTTPD;
 
 
 /**
- * Simple REST Webserver that can be used to mock REST responses to client-code tests.
+ * Simple REST WebServer that can be used to mock REST responses to client-code tests.
  *
  * Use it as follows
  *
@@ -26,9 +27,6 @@ import org.dstadler.commons.http.NanoHTTPD;
      ..
  }
  </code>
- *
- * @author dominik.stadler
- *
  */
 public class MockRESTServer implements Closeable {
 	private static final Logger log = Logger.getLogger(MockRESTServer.class.getName());
@@ -37,11 +35,11 @@ public class MockRESTServer implements Closeable {
 	private static final int PORT_RANGE_START = 15100;
 	private static final int PORT_RANGE_END = 15110;
 
-	NanoHTTPD httpd;
-	int port;
+	private NanoHTTPD httpd;
+	private int port;
 
 	/**
-	 * Create a mock server that responds to REST requests.
+	 * Create a mock server that responds to REST requests with the given HTTP Status Code.
 	 *
 	 * The server tries ports in the range listed above to find one that can be used. If none is usable, a IOException
 	 * is thrown.
@@ -61,14 +59,14 @@ public class MockRESTServer implements Closeable {
 			 * Internal method to provide the response that is set.
 			 */
 			@Override
-			public Response serve(String uri, String method, Properties header, Properties parms) {
+			public Response serve(String uri, String method, Properties header, Properties params) {
 				return new NanoHTTPD.Response(status, mime, msg);
 			}
 		};
 	}
 
 	/**
-	 * Create a mock server that responds to REST requests.
+	 * Create a mock server that handles REST requests by running the given Runnable and responding with the given HTTP Status Code.
 	 *
 	 * The server tries ports in the range listed above to find one that can be used. If none is usable, a IOException
 	 * is thrown.
@@ -88,9 +86,39 @@ public class MockRESTServer implements Closeable {
 			 * Internal method to run the provided Runnable
 			 */
 			@Override
-			public Response serve(String uri, String method, Properties header, Properties parms) {
+			public Response serve(String uri, String method, Properties header, Properties params) {
 				response.run();
 				return new NanoHTTPD.Response(status, mime, msg);
+			}
+		};
+	}
+
+	/**
+	 * Create a mock server that responds to REST requests via the given Callable.
+	 *
+	 * The server tries ports in the range listed above to find one that can be used. If none is usable, a IOException
+	 * is thrown.
+	 *
+	 * @param response A {@link Callable} which is called whenever the HTTP server is called. The returned
+	 *                 {@link org.dstadler.commons.http.NanoHTTPD.Response} contains the HTTP Status Code,
+	 *                 the mime-type and the result-text.
+	 * @throws IOException If instantiating the Server failed.
+	 */
+	public MockRESTServer(final Callable<NanoHTTPD.Response> response) throws IOException {
+		// first try to get the next free port
+		port = getNextFreePort();
+
+		httpd = new NanoHTTPD(port) {
+			/**
+			 * Internal method to run the provided Runnable
+			 */
+			@Override
+			public Response serve(String uri, String method, Properties header, Properties params) {
+				try {
+					return response.call();
+				} catch (Exception e) {
+					throw new IllegalStateException(e);
+				}
 			}
 		};
 	}
@@ -122,15 +150,6 @@ public class MockRESTServer implements Closeable {
 
 	public int getPort() {
 		return port;
-	}
-
-	@Deprecated
-	public void stop() {
-		try {
-			close();
-		} catch (IOException e) {
-			throw new IllegalStateException(e);
-		}
 	}
 
 	@Override

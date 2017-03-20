@@ -16,12 +16,6 @@ repositories {
 	mavenCentral()
 }
 
-eclipse {
-	project {
-		name = 'commons-test.git'
-	}
-}
-
 dependencies {
 	compile 'org.apache.commons:commons-lang3:3.5'
 	compile 'org.dstadler:commons-dost:1.0.0.22'

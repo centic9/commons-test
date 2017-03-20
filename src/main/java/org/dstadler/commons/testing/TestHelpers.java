@@ -38,6 +38,7 @@ public class TestHelpers {
 	 * @param notequal
 	 *            An object of the type which should be different from "obj" and "equal"
 	 */
+	@SuppressWarnings({"EqualsWithItself", "ObjectEqualsNull"})
 	public static void EqualsTest(final Object obj, final Object equal, final Object notequal) {
 		// none of the three should be null
 		assertNotNull("Object in EqualsTest should not be null!", obj);
@@ -113,8 +114,9 @@ public class TestHelpers {
 	 *            An object which is not equal to "obj"
 	 * @param notEqualIsLess True if the notequal object should be less than obj.
 	 */
+	@SuppressWarnings("ConstantConditions")
 	public static <T extends Comparable<T>> void CompareToTest(final T obj, final T equal,
-			final T notequal, boolean notEqualIsLess) {
+															   final T notequal, boolean notEqualIsLess) {
 		// none of the three should be null
 		assertNotNull("Object in CompareToTest should not be null!", obj);
 		assertNotNull("Equals-object in CompareToTest should not be null!", equal);	// NOPMD
@@ -325,7 +327,7 @@ public class TestHelpers {
 	 * @throws Exception Any exception thrown by invoking clone() on obj via reflection.
 	 */
 	public static void CloneTest(final Cloneable obj) throws Exception {
-		final Method m = obj.getClass().getMethod("clone", new Class[] {});
+		final Method m = obj.getClass().getMethod("clone");
 		assertNotNull("Need to find a method called 'clone' in object of type '" + obj.getClass().getName()
 				+ "' in CloneTest!", m);
 		// assertTrue("Method 'clone' on object of type '" +
@@ -567,8 +569,7 @@ public class TestHelpers {
 	public static void assertURLWorks(String urlString, int timeout) throws IOException {
 		URL url = new URL(urlString);
 
-        HttpURLConnection conn = null;
-        conn = (HttpURLConnection) url.openConnection();
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         try {
 	        conn.setDoOutput(false);
 	        conn.setDoInput(true);

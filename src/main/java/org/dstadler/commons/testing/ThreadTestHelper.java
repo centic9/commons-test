@@ -164,8 +164,7 @@ public class ThreadTestHelper {
 	private Thread startThread(final int threadnum, final TestRunnable run) {
 		log.fine("Starting thread number: " + threadnum);
 
-		Thread t1 = null;
-		t1 = new Thread(new Runnable() {
+		Thread t1 = new Thread(new Runnable() {
 
 			@Override
 			public void run() {
@@ -217,7 +216,7 @@ public class ThreadTestHelper {
 		 *
 		 * @see java.lang.Thread#run()
 		 */
-		public abstract void run(int threadnum, int iter) throws Exception;
+		void run(int threadnum, int iter) throws Exception;
 
 		/**
 		 * Perform any action that should be done at the end.

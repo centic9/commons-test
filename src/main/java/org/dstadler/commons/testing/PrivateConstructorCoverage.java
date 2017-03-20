@@ -43,7 +43,7 @@ public class PrivateConstructorCoverage {
         }
 
 		// get the default constructor
-		final Constructor<T> c = targetClass.getDeclaredConstructor(new Class[] {});
+		final Constructor<T> c = targetClass.getDeclaredConstructor();
 
 		// make it callable from the outside
 		c.setAccessible(true);

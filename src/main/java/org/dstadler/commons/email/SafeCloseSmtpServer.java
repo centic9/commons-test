@@ -138,8 +138,8 @@ public final class SafeCloseSmtpServer implements Runnable {
 						 * method
 						 * to limit the duration that we hold the lock.
 						 */
-						List<SmtpMessage> msgs = handleTransaction(out, input);
-						receivedMail.addAll(msgs);
+						List<SmtpMessage> messages = handleTransaction(out, input);
+						receivedMail.addAll(messages);
 					}
 					socket.close();
 				} finally {
@@ -222,7 +222,7 @@ public final class SafeCloseSmtpServer implements Runnable {
 			SmtpResponse response = request.execute();
 			// Move to next internal state
 			smtpState = response.getNextState();
-			// Send reponse to client
+			// Send response to client
 			sendResponse(out, response);
 
 			// Store input in message

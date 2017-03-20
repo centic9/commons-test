@@ -80,16 +80,16 @@ public class MockRESTServerTest {
     private void runWithHostname(String hostname) throws IOException {
         try (MockRESTServer server = new MockRESTServer(NanoHTTPD.HTTP_OK,  NanoHTTPD.MIME_PLAINTEXT, "OK")) {
             boolean check = UrlUtils.isAvailable("http://" + hostname + ":" + server.getPort(), false, 500);
-            assertTrue("Host: " + hostname + ":" + server.getPort() + ": Had: " + check, check);
+            assertTrue("Expect URL to be available. Host: " + hostname + ":" + server.getPort() + ": Had: " + check, check);
 
             check = UrlUtils.isAvailable("http://" + hostname + ":" + server.getPort(), true, 500);
-            assertTrue("Host: " + hostname + ":" + server.getPort() + ": Had: " + check, check);
+            assertTrue("Expect URL to be available. Host: " + hostname + ":" + server.getPort() + ": Had: " + check, check);
 
             String checkStr = UrlUtils.retrieveData("http://" + hostname + ":" + server.getPort(), 500);
-            assertTrue("Host: " + hostname + ":" + server.getPort() + ": Had: " + checkStr, checkStr.length() > 0);
+            assertTrue("Expect URL to be available. Host: " + hostname + ":" + server.getPort() + ": Had: " + checkStr, checkStr.length() > 0);
 
             String data = UrlUtils.retrieveData("http://" + hostname + ":" + server.getPort(), 500);
-            assertEquals("Host: " + hostname + ":" + server.getPort() + ": Had: " + data, "OK", data);
+            assertEquals("Expect URL to return 'OK'. Host: " + hostname + ":" + server.getPort() + ": Had: " + data, "OK", data);
         }
     }
 

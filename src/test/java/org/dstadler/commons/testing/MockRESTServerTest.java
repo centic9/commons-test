@@ -1,18 +1,20 @@
 package org.dstadler.commons.testing;
 
-import static org.junit.Assert.*;
-
-import java.io.IOException;
-import java.net.InetAddress;
-import java.util.concurrent.Callable;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.logging.Logger;
-
 import org.dstadler.commons.http.NanoHTTPD;
 import org.dstadler.commons.logging.jdk.LoggerFactory;
 import org.dstadler.commons.net.UrlUtils;
 import org.junit.After;
 import org.junit.Test;
+
+import java.io.IOException;
+import java.net.Inet6Address;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.util.Enumeration;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.logging.Logger;
+
+import static org.junit.Assert.*;
 
 
 /**
@@ -30,17 +32,17 @@ public class MockRESTServerTest {
     }
 
     @Test
-    public void testLocalhost() throws IOException {
+    public void testLocalhost() throws Exception {
         runWithHostname("localhost");
     }
 
     @Test
-    public void testLocalhostIP() throws IOException {
+    public void testLocalhostIP() throws Exception {
         runWithHostname("127.0.0.1");
     }
 
     @Test
-    public void testIP() throws IOException {
+    public void testIP() throws Exception {
         InetAddress localHost = java.net.InetAddress.getLocalHost();
         assertNotNull("Should get a local address", localHost);
         String ipAddress = localHost.getHostAddress();
@@ -56,7 +58,7 @@ public class MockRESTServerTest {
     }
 
     @Test
-    public void testHostname() throws IOException {
+    public void testHostname() throws Exception {
         assertNotNull(java.net.InetAddress.getLocalHost());
         String hostname = java.net.InetAddress.getLocalHost().getHostName();
         assertNotNull(hostname);
@@ -67,7 +69,7 @@ public class MockRESTServerTest {
     }
 
     @Test
-    public void testCanonicalHostname() throws IOException {
+    public void testCanonicalHostname() throws Exception {
         assertNotNull(java.net.InetAddress.getLocalHost());
         String hostname = java.net.InetAddress.getLocalHost().getCanonicalHostName();
         assertNotNull(hostname);
@@ -77,19 +79,50 @@ public class MockRESTServerTest {
         runWithHostname(hostname);
     }
 
-    private void runWithHostname(String hostname) throws IOException {
+    @Test
+    public void testAllNetworkInterfaces() throws Exception {
+        final Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
+        while(interfaces.hasMoreElements()) {
+            final NetworkInterface networkInterface = interfaces.nextElement();
+            final Enumeration<InetAddress> inetAddresses = networkInterface.getInetAddresses();
+            while(inetAddresses.hasMoreElements()) {
+                final InetAddress inetAddress = inetAddresses.nextElement();
+                assertNotNull(inetAddress);
+                String hostname = inetAddress.getCanonicalHostName();
+                assertNotNull(hostname);
+                assertFalse(hostname.equals("localhost"));
+                assertFalse(hostname.startsWith("127.0.0"));
+
+                // UrlUtils does not support IPv6 yet
+                if(inetAddress instanceof Inet6Address) {
+                    continue;
+                }
+
+                runWithHostname(hostname);
+            }
+        }
+    }
+
+    private void runWithHostname(String hostname) throws IOException, InterruptedException {
+        if(hostname.startsWith("169.254")) {
+            // don't try to contact this IP-range, it is usually used for VirtualBox network interfaces that might be unavailable
+            return;
+        }
+
         try (MockRESTServer server = new MockRESTServer(NanoHTTPD.HTTP_OK,  NanoHTTPD.MIME_PLAINTEXT, "OK")) {
-            boolean check = UrlUtils.isAvailable("http://" + hostname + ":" + server.getPort(), false, 500);
-            assertTrue("Expect URL to be available. Host: " + hostname + ":" + server.getPort() + ": Had: " + check, check);
+            final String url = "http://" + hostname + ":" + server.getPort();
+            boolean check = UrlUtils.isAvailable(url, false, 500);
+            assertTrue("Expect URL to be available. " + url + ": Had: " + check + ", on Windows this might indicate that a VirtualBox related network interface is enabled",
+                    check);
 
-            check = UrlUtils.isAvailable("http://" + hostname + ":" + server.getPort(), true, 500);
-            assertTrue("Expect URL to be available. Host: " + hostname + ":" + server.getPort() + ": Had: " + check, check);
+            check = UrlUtils.isAvailable(url, true, 500);
+            assertTrue("Expect URL to be available. " + url + ": Had: " + check, check);
 
-            String checkStr = UrlUtils.retrieveData("http://" + hostname + ":" + server.getPort(), 500);
-            assertTrue("Expect URL to be available. Host: " + hostname + ":" + server.getPort() + ": Had: " + checkStr, checkStr.length() > 0);
+            String checkStr = UrlUtils.retrieveData(url, 500);
+            assertTrue("Expect URL to be available. " + url + ": Had: " + checkStr, checkStr.length() > 0);
 
-            String data = UrlUtils.retrieveData("http://" + hostname + ":" + server.getPort(), 500);
-            assertEquals("Expect URL to return 'OK'. Host: " + hostname + ":" + server.getPort() + ": Had: " + data, "OK", data);
+            String data = UrlUtils.retrieveData(url, 500);
+            assertEquals("Expect URL to return 'OK'. " + url + ": Had: " + data, "OK", data);
         }
     }
 
@@ -129,12 +162,9 @@ public class MockRESTServerTest {
     @Test
     public void testWithRunnable() throws IOException {
         final AtomicBoolean called = new AtomicBoolean();
-        try (MockRESTServer server = new MockRESTServer(new Runnable() {
-            @Override
-            public void run() {
-                assertFalse("Should be called exactly once, but was already called before", called.get());
-                called.set(true);
-            }
+        try (MockRESTServer server = new MockRESTServer(() -> {
+            assertFalse("Should be called exactly once, but was already called before", called.get());
+            called.set(true);
         }, NanoHTTPD.HTTP_OK, NanoHTTPD.MIME_HTML, "<html>1</html>")) {
             String data = UrlUtils.retrieveData("http://localhost:" + server.getPort(), 10_000);
             assertEquals("<html>1</html>", data);
@@ -146,13 +176,10 @@ public class MockRESTServerTest {
     @Test
     public void testWithCallable() throws IOException {
         final AtomicBoolean called = new AtomicBoolean();
-        try (MockRESTServer server = new MockRESTServer(new Callable<NanoHTTPD.Response>() {
-            @Override
-            public NanoHTTPD.Response call() {
-                assertFalse("Should be called exactly once, but was already called before", called.get());
-                called.set(true);
-                return new NanoHTTPD.Response(NanoHTTPD.HTTP_OK, NanoHTTPD.MIME_HTML, "<html>1</html>");
-            }
+        try (MockRESTServer server = new MockRESTServer(() -> {
+            assertFalse("Should be called exactly once, but was already called before", called.get());
+            called.set(true);
+            return new NanoHTTPD.Response(NanoHTTPD.HTTP_OK, NanoHTTPD.MIME_HTML, "<html>1</html>");
         })) {
             String data = UrlUtils.retrieveData("http://localhost:" + server.getPort(), 10_000);
             assertEquals("<html>1</html>", data);
@@ -164,13 +191,10 @@ public class MockRESTServerTest {
     @Test
     public void testWithCallableException() throws IOException {
         final AtomicBoolean called = new AtomicBoolean();
-        try (MockRESTServer server = new MockRESTServer(new Callable<NanoHTTPD.Response>() {
-            @Override
-            public NanoHTTPD.Response call() {
-                assertFalse("Should be called exactly once, but was already called before", called.get());
-                called.set(true);
-                throw new RuntimeException("TestException");
-            }
+        try (MockRESTServer server = new MockRESTServer(() -> {
+            assertFalse("Should be called exactly once, but was already called before", called.get());
+            called.set(true);
+            throw new RuntimeException("TestException");
         })) {
             try {
                 UrlUtils.retrieveData("http://localhost:" + server.getPort(), 10_000);

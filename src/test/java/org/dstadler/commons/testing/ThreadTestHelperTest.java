@@ -8,6 +8,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.Test;
 
+@SuppressWarnings("Convert2Lambda")		// should still compile with Java 7
 public class ThreadTestHelperTest {
 
 	@Test
@@ -19,12 +20,12 @@ public class ThreadTestHelperTest {
         final AtomicInteger endCount = new AtomicInteger();
         helper.executeTest(new ThreadTestHelper.TestRunnable() {
             @Override
-            public void doEnd(int threadnum) throws Exception {
+            public void doEnd(int threadNum) throws Exception {
                 endCount.incrementAndGet();
             }
 
             @Override
-            public void run(int threadnum, int iter) throws Exception {
+            public void run(int threadNum, int iter) throws Exception {
                 count.incrementAndGet();
             }
         });
@@ -35,12 +36,13 @@ public class ThreadTestHelperTest {
 
 	@Test
 	public void testWaitForThreadToFinish() throws Exception {
-		ThreadTestHelper.waitForThreadToFinish("some nonexisting name");
+		ThreadTestHelper.waitForThreadToFinish("some non-existing name");
+		ThreadTestHelper.waitForThreadToFinish("another");
 	}
 
 	@Test
 	public void testWaitForThreadToFinishSubstring() throws Exception {
-		ThreadTestHelper.waitForThreadToFinishSubstring("some nonexisting name");
+		ThreadTestHelper.waitForThreadToFinishSubstring("some non-existing name");
 	}
 
 	@Test
@@ -54,5 +56,15 @@ public class ThreadTestHelperTest {
 		}, 23);
 
         assertEquals(23, list.size());
+
+        list = ThreadTestHelper.executeTest(new Callable<String>() {
+
+			@Override
+			public String call() throws Exception {
+				return "str";
+			}
+		}, 1);
+
+        assertEquals(1, list.size());
 	}
 }

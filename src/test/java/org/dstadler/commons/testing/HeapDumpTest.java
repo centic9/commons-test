@@ -23,7 +23,7 @@ public class HeapDumpTest {
 
         // a second time to cover singleton
         try {
-            HeapDump.dumpHeap(file.getAbsolutePath(), true);
+            HeapDump.dumpHeap(file.getAbsolutePath(), false);
         } finally {
             assertTrue(file.exists());
             assertTrue(file.delete());

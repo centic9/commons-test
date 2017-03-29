@@ -16,7 +16,7 @@ public class TestEnvironmentTest {
     }
 
     @Test
-    public void testPathes() {
+    public void testPaths() {
         assertNotNull(TestEnvironment.ABS_RUNTIME_DATA_PATH);
         assertNotNull(TestEnvironment.ABS_TEST_DATA_PATH);
     }
@@ -33,7 +33,7 @@ public class TestEnvironmentTest {
         assertTrue(dir.exists());
 
         File file = new File(dir, "testfile");
-        FileUtils.writeStringToFile(file, "filedata");
+        FileUtils.writeStringToFile(file, "filedata", "UTF-8");
         assertTrue(file.exists());
 
         TestEnvironment.createOrClearRuntimeData();
@@ -49,7 +49,7 @@ public class TestEnvironmentTest {
         assertTrue(dir.exists());
 
         File file = new File(dir, "testfile");
-        FileUtils.writeStringToFile(file, "filedata");
+        FileUtils.writeStringToFile(file, "filedata", "UTF-8");
         assertTrue(file.exists());
 
         TestEnvironment.clearRuntimeData();
@@ -66,7 +66,7 @@ public class TestEnvironmentTest {
 
         // create a file in place of the directory
         assertTrue(directory.delete());
-        FileUtils.writeStringToFile(directory, "somedata");
+        FileUtils.writeStringToFile(directory, "somedata", "UTF-8");
 
         try {
             TestEnvironment.createTestDirectory(TestEnvironment.class);

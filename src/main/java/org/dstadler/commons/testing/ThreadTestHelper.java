@@ -31,18 +31,19 @@ import org.dstadler.commons.logging.jdk.LoggerFactory;
 
         helper.executeTest(new ThreadTestHelper.TestRunnable() {
             {@literal @}Override
-            public void doEnd(int threadnum) throws Exception {
+            public void doEnd(int threadNum) throws Exception {
                 // do stuff at the end ...
             }
 
             {@literal @}Override
-            public void run(int threadnum, int iter) throws Exception {
+            public void run(int threadNum, int iter) throws Exception {
                 // do the actual threaded work ...
             }
         });
     }
   </code>
  */
+@SuppressWarnings("Convert2Lambda")		// should still compile with Java 7
 public class ThreadTestHelper {
 
 	private static Logger log = LoggerFactory.make();
@@ -144,7 +145,6 @@ public class ThreadTestHelper {
 			throw e.getCause();
 		} finally {
 			executor.shutdownNow();
-			executor = null;
 		}
 	}
 
@@ -152,7 +152,7 @@ public class ThreadTestHelper {
 	 * This method is executed to start one thread. The thread will execute the
 	 * provided runnable a number of times.
 	 *
-	 * @param threadnum
+	 * @param threadNum
 	 *        The number of this thread
 	 * @param run
 	 *        The Runnable object that is used to perform the actual test
@@ -161,8 +161,8 @@ public class ThreadTestHelper {
 	 * @return The thread that was started.
 	 *
 	 */
-	private Thread startThread(final int threadnum, final TestRunnable run) {
-		log.fine("Starting thread number: " + threadnum);
+	private Thread startThread(final int threadNum, final TestRunnable run) {
+		log.fine("Starting thread number: " + threadNum);
 
 		Thread t1 = new Thread(new Runnable() {
 
@@ -175,22 +175,22 @@ public class ThreadTestHelper {
 						// Thread.currentThread().getName());
 
 						// call the actual testcode
-						run.run(threadnum, iter);
+						run.run(threadNum, iter);
 
-						executions[threadnum]++;
+						executions[threadNum]++;
 					}
 
 					// do end-work here, we don't do this in a finally as we log
 					// Exception
 					// then anyway
-					run.doEnd(threadnum);
+					run.doEnd(threadNum);
 				} catch (Throwable e) {
-					// log.log(Level.SEVERE, "Caught unexpected Throable", e);
+					// log.log(Level.SEVERE, "Caught unexpected Throwable", e);
 					exception = e;
 				}
 
 			}
-		}, "ThreadTestHelper-Thread " + threadnum + ": " + run.getClass().getName());
+		}, "ThreadTestHelper-Thread " + threadNum + ": " + run.getClass().getName());
 
 		t1.start();
 
@@ -207,7 +207,7 @@ public class ThreadTestHelper {
 		 * <p>
 		 * The general contract of the method <code>run</code> is that it may take any action whatsoever.
 		 *
-		 * @param threadnum
+		 * @param threadNum
 		 *        The number of the thread executing this run()
 		 * @param iter
 		 *        The count of how many times this thread executed the
@@ -216,7 +216,7 @@ public class ThreadTestHelper {
 		 *
 		 * @see java.lang.Thread#run()
 		 */
-		void run(int threadnum, int iter) throws Exception;
+		void run(int threadNum, int iter) throws Exception;
 
 		/**
 		 * Perform any action that should be done at the end.
@@ -224,11 +224,11 @@ public class ThreadTestHelper {
 		 * This method should throw an Exception if any check fails at this
 		 * point.
 		 *
-		 * @param threadnum
+		 * @param threadNum
 		 *        The number of the thread executing this doEnd()
 		 * @throws Exception Thrown on any failure during running the test
 		 */
-		void doEnd(int threadnum) throws Exception;
+		void doEnd(int threadNum) throws Exception;
 	}
 
 	/**

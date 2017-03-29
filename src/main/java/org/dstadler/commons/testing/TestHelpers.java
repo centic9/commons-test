@@ -21,6 +21,7 @@ import org.junit.Assume;
  * @author dominik.stadler
  *
  */
+@SuppressWarnings("EqualsWithItself")
 public class TestHelpers {
 	/**
 	 * Verify that the provided object implements the basic requirements of an "equals()" method correctly, i.e. equal

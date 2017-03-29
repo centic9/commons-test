@@ -8,6 +8,7 @@ import java.util.logging.Level;
 import org.dstadler.commons.http.NanoHTTPD;
 import org.junit.Test;
 
+@SuppressWarnings("Convert2Lambda")		// should still compile/run with Java 7
 public class TestHelpersTest {
 
 	@Test

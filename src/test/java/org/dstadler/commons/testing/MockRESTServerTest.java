@@ -11,6 +11,7 @@ import java.net.Inet6Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.util.Enumeration;
+import java.util.concurrent.Callable;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Logger;
 
@@ -23,6 +24,7 @@ import static org.junit.Assert.*;
  *
  * @author cwat-dstadler
  */
+@SuppressWarnings("Convert2Lambda")     // should still compile with Java 7
 public class MockRESTServerTest {
     private static final Logger log = LoggerFactory.make();
 
@@ -162,9 +164,12 @@ public class MockRESTServerTest {
     @Test
     public void testWithRunnable() throws IOException {
         final AtomicBoolean called = new AtomicBoolean();
-        try (MockRESTServer server = new MockRESTServer(() -> {
-            assertFalse("Should be called exactly once, but was already called before", called.get());
-            called.set(true);
+        try (MockRESTServer server = new MockRESTServer(new Runnable() {
+            @Override
+            public void run() {
+                assertFalse("Should be called exactly once, but was already called before", called.get());
+                called.set(true);
+            }
         }, NanoHTTPD.HTTP_OK, NanoHTTPD.MIME_HTML, "<html>1</html>")) {
             String data = UrlUtils.retrieveData("http://localhost:" + server.getPort(), 10_000);
             assertEquals("<html>1</html>", data);
@@ -176,10 +181,13 @@ public class MockRESTServerTest {
     @Test
     public void testWithCallable() throws IOException {
         final AtomicBoolean called = new AtomicBoolean();
-        try (MockRESTServer server = new MockRESTServer(() -> {
-            assertFalse("Should be called exactly once, but was already called before", called.get());
-            called.set(true);
-            return new NanoHTTPD.Response(NanoHTTPD.HTTP_OK, NanoHTTPD.MIME_HTML, "<html>1</html>");
+        try (MockRESTServer server = new MockRESTServer(new Callable<NanoHTTPD.Response>() {
+            @Override
+            public NanoHTTPD.Response call() throws Exception {
+                assertFalse("Should be called exactly once, but was already called before", called.get());
+                called.set(true);
+                return new NanoHTTPD.Response(NanoHTTPD.HTTP_OK, NanoHTTPD.MIME_HTML, "<html>1</html>");
+            }
         })) {
             String data = UrlUtils.retrieveData("http://localhost:" + server.getPort(), 10_000);
             assertEquals("<html>1</html>", data);
@@ -191,10 +199,13 @@ public class MockRESTServerTest {
     @Test
     public void testWithCallableException() throws IOException {
         final AtomicBoolean called = new AtomicBoolean();
-        try (MockRESTServer server = new MockRESTServer(() -> {
-            assertFalse("Should be called exactly once, but was already called before", called.get());
-            called.set(true);
-            throw new RuntimeException("TestException");
+        try (MockRESTServer server = new MockRESTServer(new Callable<NanoHTTPD.Response>() {
+            @Override
+            public NanoHTTPD.Response call() throws Exception {
+                assertFalse("Should be called exactly once, but was already called before", called.get());
+                called.set(true);
+                throw new RuntimeException("TestException");
+            }
         })) {
             try {
                 UrlUtils.retrieveData("http://localhost:" + server.getPort(), 10_000);

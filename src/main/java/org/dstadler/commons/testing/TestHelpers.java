@@ -3,6 +3,7 @@ package org.dstadler.commons.testing;
 import static org.junit.Assert.*;
 
 import java.awt.GraphicsEnvironment;
+import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -594,5 +595,32 @@ public class TestHelpers {
 		GraphicsEnvironment.getLocalGraphicsEnvironment();
 		Assume.assumeFalse("Can not run some tests when tests are executed in headless mode",
 				GraphicsEnvironment.isHeadless());
+	}
+
+	/**
+	 * Creates a temporary directory which is guaranted to be unique (via File.createTempFile)
+	 * and ensures that the directory exists.
+	 *
+	 * Note: The caller needs to ensure that the directory is removed again after use else it
+	 * 		will be left on the disk.
+	 *
+	 * @param  prefix     The prefix string to be used in generating the directory's
+	 *                    name; must be at least three characters long
+	 *
+	 * @param  suffix     The suffix string to be used in generating the directory's
+	 *                    name; may be <code>null</code>, in which case the
+	 *                    suffix <code>".tmp"</code> will be used
+	 * @return A File pointing to the newly created directory.
+	 * @throws IOException If creating the temporary file fails.
+	 * @throws AssertionError If creating the directory fails.
+	 */
+	public static File createTempDirectory(String prefix, String suffix) throws IOException {
+		final File dir = File.createTempFile(prefix, suffix);
+
+		assertTrue(dir.delete());
+		assertTrue(dir.mkdir());
+		assertTrue(dir.exists());
+
+		return dir;
 	}
 }

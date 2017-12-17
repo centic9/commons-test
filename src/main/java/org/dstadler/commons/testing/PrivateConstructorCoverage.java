@@ -49,6 +49,6 @@ public class PrivateConstructorCoverage {
 		c.setAccessible(true);
 
 		// call it
-		return c.newInstance((Object[]) null);
+		return c.newInstance();
 	}
 }

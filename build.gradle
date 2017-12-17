@@ -8,7 +8,7 @@ apply plugin: 'jacoco'
 apply plugin: 'maven'
 apply plugin: 'signing'
 
-sourceCompatibility = 1.7
+sourceCompatibility = 1.8
 group = 'org.dstadler'
 archivesBaseName = 'commons-test'
 
@@ -22,7 +22,7 @@ configurations {
 }
 
 dependencies {
-	compile 'org.apache.commons:commons-lang3:3.6'
+	compile 'org.apache.commons:commons-lang3:3.7'
 	compile 'org.dstadler:commons-dost:1.0.0.23'
 
 	// dumbster is somewhat broken, but we use it in SafeCloseSmtpServer...
@@ -59,7 +59,7 @@ test {
 }
 
 jacoco {
-	toolVersion = '0.7.8'
+	toolVersion = '0.7.9'
 }
 
 jacocoTestReport {

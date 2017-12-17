@@ -134,12 +134,7 @@ public class TestHelpersTest {
 
     @Test
     public void testRunTestWithDifferentLogLevel() {
-        TestHelpers.runTestWithDifferentLogLevel(new Runnable() {
-            @Override
-            public void run() {
-                testAssertNotContains();
-            }
-        }, TestHelpers.class.getName(), Level.WARNING);
+        TestHelpers.runTestWithDifferentLogLevel(this::testAssertNotContains, TestHelpers.class.getName(), Level.WARNING);
     }
 
     @Test

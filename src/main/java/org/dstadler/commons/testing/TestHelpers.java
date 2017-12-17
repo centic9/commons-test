@@ -343,11 +343,11 @@ public class TestHelpers {
 
 		// should return the same type of object
 		assertTrue("clone() should return the same type of object (i.e. the same class) in CloneTest!", m	// NOPMD
-				.invoke(obj, new Object[] {}).getClass() == obj.getClass());
+				.invoke(obj).getClass() == obj.getClass());
 
 		// cloned objects should be equal to the original object
 		assertTrue("clone() should return an object that is equal() to the original object in CloneTest!", m
-				.invoke(obj, new Object[] {}).equals(obj));
+				.invoke(obj).equals(obj));
 	}
 
 	/**

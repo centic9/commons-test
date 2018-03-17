@@ -22,7 +22,12 @@
 
 package org.dstadler.commons.email;
 
-import com.dumbster.smtp.*;
+import com.dumbster.smtp.SimpleSmtpServer;
+import com.dumbster.smtp.SmtpActionType;
+import com.dumbster.smtp.SmtpMessage;
+import com.dumbster.smtp.SmtpRequest;
+import com.dumbster.smtp.SmtpResponse;
+import com.dumbster.smtp.SmtpState;
 
 import java.io.BufferedReader;
 import java.io.IOException;

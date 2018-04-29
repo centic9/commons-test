@@ -22,7 +22,6 @@
 
 package org.dstadler.commons.email;
 
-import com.dumbster.smtp.SimpleSmtpServer;
 import com.dumbster.smtp.SmtpActionType;
 import com.dumbster.smtp.SmtpMessage;
 import com.dumbster.smtp.SmtpRequest;
@@ -85,7 +84,7 @@ public final class SafeCloseSmtpServer implements Runnable {
 	/**
 	 * Port the server listens on - set to the default SMTP port initially.
 	 */
-	private int port = SimpleSmtpServer.DEFAULT_SMTP_PORT;
+	private final int port;
 
 	private Semaphore semaphore = new Semaphore(MAXIMUM_CONCURRENT_READERS);
 
@@ -102,7 +101,6 @@ public final class SafeCloseSmtpServer implements Runnable {
 	/**
 	 * Main loop of the SMTP server.
 	 */
-    @SuppressWarnings("resource")
     @Override
 	public void run() {
 		stopped = false;

@@ -6,6 +6,7 @@ import org.dstadler.commons.logging.jdk.LoggerFactory;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -156,8 +157,9 @@ public class TestEnvironment {
 
 			try {
 				FileUtils.deleteDirectory(directory);
-			} catch (@SuppressWarnings("unused") IOException e1) {
+			} catch (IOException e1) {
 				String[] list = directory.list();
+				Objects.requireNonNull(list, "Directory " + directory + " not found or not accessible");
 				StringBuilder builder = new StringBuilder("Had leftover files/directories: ").append(Arrays.toString(list)).append("\n");
 				for(String file : list) {
 					File subFile = new File(directory, file);

@@ -2,7 +2,6 @@ package org.dstadler.commons.testing;
 
 import static org.junit.Assert.assertEquals;
 
-import java.lang.Thread.UncaughtExceptionHandler;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -43,7 +42,6 @@ import org.dstadler.commons.logging.jdk.LoggerFactory;
     }
   </code>
  */
-@SuppressWarnings("Convert2Lambda")		// should still compile with Java 7
 public class ThreadTestHelper {
 
 	private static Logger log = LoggerFactory.make();
@@ -52,7 +50,7 @@ public class ThreadTestHelper {
 	private final int testsPerThread;
 
 	private volatile Throwable exception = null;
-	private int executions[] = null;
+	private int executions[];
 
 	/**
 	 * Initialize the class with the number of tests that should be executed
@@ -115,23 +113,15 @@ public class ThreadTestHelper {
 		final CyclicBarrier barrier = new CyclicBarrier(runs);
 		ExecutorService executor = Executors.newCachedThreadPool(
 				new BasicThreadFactory.Builder()
-						.uncaughtExceptionHandler(new UncaughtExceptionHandler() {
-							@Override
-							public void uncaughtException(Thread t, Throwable e) {
-								log.log(Level.SEVERE, "An uncaught exception happened in Thread " + t.getName(), e);
-							}
-						})
+						.uncaughtExceptionHandler((t, e) -> log.log(Level.SEVERE, "An uncaught exception happened in Thread " + t.getName(), e))
 						.namingPattern(ThreadTestHelper.class.getSimpleName() + "-Thread-%d")
 						.build());
 		try {
 			List<Callable<T>> tasks = new ArrayList<>(runs);
 			for (int i = 0; i < runs; i++) {
-				tasks.add(new Callable<T>() {
-					@Override
-					public T call() throws Exception {
-						barrier.await(); // causes more contention
-						return testable.call();
-					}
+				tasks.add(() -> {
+					barrier.await(); // causes more contention
+					return testable.call();
 				});
 			}
 
@@ -164,32 +154,28 @@ public class ThreadTestHelper {
 	private Thread startThread(final int threadNum, final TestRunnable run) {
 		log.fine("Starting thread number: " + threadNum);
 
-		Thread t1 = new Thread(new Runnable() {
+		Thread t1 = new Thread(() -> {
+			try {
+				for (int iter = 0; iter < testsPerThread && exception == null; iter++) {
+					// log.fine("Executing iteration " + iter +
+					// " in thread" +
+					// Thread.currentThread().getName());
 
-			@Override
-			public void run() {
-				try {
-					for (int iter = 0; iter < testsPerThread && exception == null; iter++) {
-						// log.fine("Executing iteration " + iter +
-						// " in thread" +
-						// Thread.currentThread().getName());
+					// call the actual testcode
+					run.run(threadNum, iter);
 
-						// call the actual testcode
-						run.run(threadNum, iter);
-
-						executions[threadNum]++;
-					}
-
-					// do end-work here, we don't do this in a finally as we log
-					// Exception
-					// then anyway
-					run.doEnd(threadNum);
-				} catch (Throwable e) {
-					// log.log(Level.SEVERE, "Caught unexpected Throwable", e);
-					exception = e;
+					executions[threadNum]++;
 				}
 
+				// do end-work here, we don't do this in a finally as we log
+				// Exception
+				// then anyway
+				run.doEnd(threadNum);
+			} catch (Throwable e) {
+				// log.log(Level.SEVERE, "Caught unexpected Throwable", e);
+				exception = e;
 			}
+
 		}, "ThreadTestHelper-Thread " + threadNum + ": " + run.getClass().getName());
 
 		t1.start();

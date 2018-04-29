@@ -144,13 +144,20 @@ public class TestHelpersTest {
         }
     }
 
+    @Test
+    public void testAssumeCanShowDialogs() {
+        // just call the method, it may ignore the test-method
+        TestHelpers.assumeCanShowDialogs();
+    }
+
     public final class CloneableImplementation implements Cloneable {
+        @SuppressWarnings("MethodDoesntCallSuperMethod")
         @Override
-        public Object clone() throws CloneNotSupportedException {
+        public Object clone() {
             return new CloneableImplementation();
         }
 
-        @SuppressWarnings("EqualsWhichDoesntCheckParameterClass")
+        @SuppressWarnings({"EqualsWhichDoesntCheckParameterClass", "Contract"})
         @Override
         public boolean equals(Object obj) {
             return true;
@@ -188,6 +195,7 @@ public class TestHelpersTest {
             return result;
         }
 
+        @SuppressWarnings("RedundantIfStatement")
         @Override
         public boolean equals(Object obj) {
             if (this == obj)

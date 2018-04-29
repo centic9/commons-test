@@ -48,58 +48,49 @@ public class TestHelpers {
 		assertNotNull("Non-equal-object in EqualsTest should not be null!", notequal);
 
 		// make sure different objects are passed in
-		assertFalse("Object and equals-object in EqualsTest should not be identical", obj == equal);	// NOPMD
-		assertFalse("Object and non-equals-object in EqualsTest should not be identical", obj == notequal);	// NOPMD
+		assertNotSame("Object and equals-object in EqualsTest should not be identical", obj, equal);	// NOPMD
+		assertNotSame("Object and non-equals-object in EqualsTest should not be identical", obj, notequal);	// NOPMD
 
 		// make sure correct objects are passed
-		assertTrue("Classes of objects in EqualsTest should be equal!", obj.getClass().equals(equal.getClass()));	// NOPMD
-		assertTrue("Classes of objects in EqualsTest should be equal!", obj.getClass().equals(	// NOPMD
-				notequal.getClass()));
+		assertEquals("Classes of objects in EqualsTest should be equal!", obj.getClass(), equal.getClass());	// NOPMD
+		assertEquals("Classes of objects in EqualsTest should be equal!", obj.getClass(), notequal.getClass());
 
 		// make sure correct parameters are passed
 		// equal should be equal to obj, not-equal should not be equal to obj!
-		assertTrue("Object and equal-object should be equal in EqualsTest!", obj.equals(equal));	// NOPMD
-		assertFalse("Object and non-equal-object should not be equal in EqualsTest!", obj.equals(notequal));	// NOPMD
+		assertEquals("Object and equal-object should be equal in EqualsTest!", obj, equal);	// NOPMD
+		assertNotEquals("Object and non-equal-object should not be equal in EqualsTest!", obj, notequal);	// NOPMD
 
 		// first test some general things that should be true with equals
 
 		// reflexive: equals to itself
-		assertTrue("Reflexive: object should be equal to itself in EqualsTest!", obj.equals(obj));	// NOPMD
-		assertTrue("Reflexive: equal-object should be equal to itself in EqualsTest!", equal.equals(equal));	// NOPMD
-		assertTrue("Reflexive: non-equal-object should be equal to itself in EqualsTest!", notequal	// NOPMD
-				.equals(notequal));
+		assertEquals("Reflexive: object should be equal to itself in EqualsTest!", obj, obj);	// NOPMD
+		assertEquals("Reflexive: equal-object should be equal to itself in EqualsTest!", equal, equal);	// NOPMD
+		assertEquals("Reflexive: non-equal-object should be equal to itself in EqualsTest!", notequal, notequal);
 
 		// not equals to null
-		assertFalse("Object should not be equal to null in EqualsTest!", obj.equals(null));	// NOPMD - null-equals() is intended here
-		assertFalse("Equal-object should not be equal to null in EqualsTest!", equal.equals(null));	// NOPMD - null-equals() is intended here
-		assertFalse("Non-equal-object should not be equal to null in EqualsTest!", notequal.equals(null));	// NOPMD - null-equals() is intended here
+		assertNotEquals("Object should not be equal to null in EqualsTest!", null, obj);	// NOPMD - null-equals() is intended here
+		assertNotEquals("Equal-object should not be equal to null in EqualsTest!", null, equal);	// NOPMD - null-equals() is intended here
+		assertNotEquals("Non-equal-object should not be equal to null in EqualsTest!", null, notequal);	// NOPMD - null-equals() is intended here
 
 		// not equals to a different type of object
-		assertFalse("Object should not be equal to an arbitrary string in EqualsTest!", obj
-						.equals("TestString"));	// NOPMD
+		assertNotEquals("Object should not be equal to an arbitrary string in EqualsTest!", "TestString", obj);	// NOPMD
 
 		// then test some things with another object that should be equal
 
 		// symmetric, if one is (not) equal to another then the reverse must be true
-		assertTrue("Symmetric: Object should be equal to equal-object in EqualsTest", obj.equals(equal));	// NOPMD
-		assertTrue("Symmetric: Equals-object should be equal to object in EqualsTest!", equal.equals(obj));	// NOPMD
-		assertFalse("Symmetric: Object should NOT be equal to non-equal-object in EqualsTest", obj	// NOPMD
-				.equals(notequal));
-		assertFalse("Symmetric: Non-equals-object should NOT be equal to object in EqualsTest!", notequal	// NOPMD
-				.equals(obj));
+		assertEquals("Symmetric: Object should be equal to equal-object in EqualsTest", obj, equal);	// NOPMD
+		assertEquals("Symmetric: Equals-object should be equal to object in EqualsTest!", equal, obj);	// NOPMD
+		assertNotEquals("Symmetric: Object should NOT be equal to non-equal-object in EqualsTest", obj, notequal);
+		assertNotEquals("Symmetric: Non-equals-object should NOT be equal to object in EqualsTest!", notequal, obj);
 
 		// transitive: if a.equals(b) and b.equals(c) then a.equals(c)
 		// not tested right now
 
 		// hashCode: equal objects should have equal hash code
-		assertTrue("Transitive: Equal objects should have equal hash-code in EqualsTest!",	// NOPMD
-				obj.hashCode() == equal.hashCode());
-		assertTrue("Transitive: Equal objects should have equal hash-code in EqualsTest!", obj.hashCode() == obj	// NOPMD
-				.hashCode());
-		assertTrue("Transitive: Equal objects should have equal hash-code in EqualsTest!",	// NOPMD
-				equal.hashCode() == equal.hashCode());
-		assertTrue("Transitive: Equal objects should have equal hash-code in EqualsTest!",	// NOPMD
-				notequal.hashCode() == notequal.hashCode());
+		assertEquals("Transitive: Equal objects should have equal hash-code in EqualsTest!", obj.hashCode(), equal.hashCode());
+		assertEquals("Transitive: Equal objects should have equal hash-code in EqualsTest!", obj.hashCode(), obj.hashCode());    // NOPMD
+		assertEquals("Transitive: Equal objects should have equal hash-code in EqualsTest!", equal.hashCode(), equal.hashCode());
+		assertEquals("Transitive: Equal objects should have equal hash-code in EqualsTest!", notequal.hashCode(), notequal.hashCode());
 	}
 
 	/**
@@ -125,15 +116,15 @@ public class TestHelpers {
 		assertNotNull("Non-equal-object in CompareToTest should not be null!", notequal);	// NOPMD
 
 		// make sure different objects are passed in
-		assertFalse("Object and equals-object in CompareToTest should not be identical", obj == equal);	// NOPMD
-		assertFalse("Object and non-equals-object in CompareToTest should not be identical", obj == notequal);	// NOPMD
+		assertNotSame("Object and equals-object in CompareToTest should not be identical", obj, equal);	// NOPMD
+		assertNotSame("Object and non-equals-object in CompareToTest should not be identical", obj, notequal);	// NOPMD
 
 		// make sure correct parameters are passed
 		// equal should be equal to obj, not-equal should not be equal to obj!
 		assertEquals("Object and equal-object should compare in CompareToTest!", 0, obj.compareTo(equal));
-		assertFalse("Object and non-equal-object should not compare in CompareToTest!", 0 == obj	// NOPMD
+		assertNotEquals("Object and non-equal-object should not compare in CompareToTest!", 0, obj    // NOPMD
 				.compareTo(notequal));
-		assertFalse("Equal-object and non-equal-object should not compare in CompareToTest!", 0 == equal	// NOPMD
+		assertNotEquals("Equal-object and non-equal-object should not compare in CompareToTest!", 0, equal    // NOPMD
 				.compareTo(notequal));
 
 		// first test some general things that should be true with equals
@@ -166,10 +157,9 @@ public class TestHelpers {
 				.compareTo(equal));
 		assertEquals("Symmetric: Equals-object should be equal to object in CompareToTest!", 0, equal	// NOPMD
 				.compareTo(obj));
-		assertFalse("Symmetric: Object should NOT be equal to non-equal-object in CompareToTest", 0 == obj	// NOPMD
+		assertNotEquals("Symmetric: Object should NOT be equal to non-equal-object in CompareToTest", 0, obj    // NOPMD
 				.compareTo(notequal));
-		assertFalse("Symmetric: Non-equals-object should NOT be equal to object in CompareToTest!",		// NOPMD
-				0 == notequal.compareTo(obj));
+		assertNotEquals("Symmetric: Non-equals-object should NOT be equal to object in CompareToTest!", 0, notequal.compareTo(obj));
 		assertEquals("Symnmetric: Comparing object and non-equal-object in both directions should lead to the same result.",
 				signum(obj.compareTo(notequal)), (-1)*signum(notequal.compareTo(obj)));
 
@@ -188,8 +178,8 @@ public class TestHelpers {
 		}
 
 		// ensure equals() and hashCode() are implemented as well here
-		assertTrue("Findbugs: Comparable objects should implement equals() the same way as compareTo().", obj.equals(equal));
-        assertFalse("Findbugs: Comparable objects should implement equals() the same way as compareTo().", obj.equals(notequal));
+		assertEquals("Findbugs: Comparable objects should implement equals() the same way as compareTo().", obj, equal);
+		assertNotEquals("Findbugs: Comparable objects should implement equals() the same way as compareTo().", obj, notequal);
         EqualsTest(obj, equal, notequal);
         assertEquals("Findbugs: Comparable objects should implement hashCode() the same way as compareTo().", obj.hashCode(), equal.hashCode());
         HashCodeTest(obj, equal);
@@ -219,13 +209,13 @@ public class TestHelpers {
 		assertNotNull("Non-equal-object in ComparatorTest should not be null!", notequal);	// NOPMD
 
 		// make sure different objects are passed in
-		assertFalse("Object and equals-object in ComparatorTest should not be identical", obj == equal);	// NOPMD
-		assertFalse("Object and non-equals-object in ComparatorTest should not be identical", obj == notequal);	// NOPMD
+		assertNotSame("Object and equals-object in ComparatorTest should not be identical", obj, equal);	// NOPMD
+		assertNotSame("Object and non-equals-object in ComparatorTest should not be identical", obj, notequal);	// NOPMD
 
 		// make sure correct parameters are passed
 		// equal should be equal to obj, not-equal should not be equal to obj!
 		assertEquals("Object and equal-object should compare in ComparatorTest!", 0, comparator.compare(obj, equal));
-		assertFalse("Object and non-equal-object should not compare in ComparatorTest!", 0 == comparator.compare(obj	// NOPMD
+		assertNotEquals("Object and non-equal-object should not compare in ComparatorTest!", 0, comparator.compare(obj    // NOPMD
 				, notequal));
 
 		// first test some general things that should be true with equals
@@ -258,10 +248,9 @@ public class TestHelpers {
 				, equal));
 		assertEquals("Symmetric: Equals-object should be equal to object in ComparatorTest!", 0, comparator.compare(equal	// NOPMD
 				, obj));
-		assertFalse("Symmetric: Object should NOT be equal to non-equal-object in ComparatorTest", 0 == comparator.compare(obj	// NOPMD
+		assertNotEquals("Symmetric: Object should NOT be equal to non-equal-object in ComparatorTest", 0, comparator.compare(obj    // NOPMD
 				, notequal));
-		assertFalse("Symmetric: Non-equals-object should NOT be equal to object in ComparatorTest!",	// NOPMD
-				0 == comparator.compare(notequal, obj));
+		assertNotEquals("Symmetric: Non-equals-object should NOT be equal to object in ComparatorTest!", 0, comparator.compare(notequal, obj));
 		assertEquals("Symnmetric: Comparing object and non-equal-object in both directions should lead to the same result.",
 				signum(comparator.compare(obj, notequal)), (-1)*signum(comparator.compare(notequal, obj)));
 
@@ -308,7 +297,7 @@ public class TestHelpers {
 		assertNotNull("A derived toString() should not return null!", obj.toString());
 
 		// toString should not return an empty string
-		assertFalse("A derived toString() should not return an empty string!", obj.toString().equals(""));
+		assertNotEquals("A derived toString() should not return an empty string!", "", obj.toString());
 
 		// check that calling it multiple times leads to the same value
 		String value = obj.toString();
@@ -338,16 +327,16 @@ public class TestHelpers {
 		// m.isAccessible());
 
 		// clone should return a different object, not the same again
-		assertTrue("clone() should not return the object itself in CloneTest!", obj != m.invoke(obj,	// NOPMD
-				new Object[] {}));
+		assertNotSame("clone() should not return the object itself in CloneTest!",
+				obj, m.invoke(obj));   // NOPMD
 
 		// should return the same type of object
-		assertTrue("clone() should return the same type of object (i.e. the same class) in CloneTest!", m	// NOPMD
-				.invoke(obj).getClass() == obj.getClass());
+		assertSame("clone() should return the same type of object (i.e. the same class) in CloneTest!", m    // NOPMD
+				.invoke(obj).getClass(), obj.getClass());
 
 		// cloned objects should be equal to the original object
-		assertTrue("clone() should return an object that is equal() to the original object in CloneTest!", m
-				.invoke(obj).equals(obj));
+		assertEquals("clone() should return an object that is equal() to the original object in CloneTest!", m
+				.invoke(obj), obj);
 	}
 
 	/**
@@ -358,9 +347,7 @@ public class TestHelpers {
 	 * @param equ An Object which should return the same hashCode() as obj.
 	 */
 	public static void HashCodeTest(final Object obj, final Object equ) {
-		assertFalse(	// NOPMD
-						"HashCodeTest expects two distinct objects with equal hashCode, but the same object is provided twice!",
-						obj == equ);
+		assertNotSame("HashCodeTest expects two distinct objects with equal hashCode, but the same object is provided twice!", obj, equ);
 
 		// The same object returns the same hashCode always
 		final int hash = obj.hashCode();
@@ -598,7 +585,7 @@ public class TestHelpers {
 	}
 
 	/**
-	 * Creates a temporary directory which is guaranted to be unique (via File.createTempFile)
+	 * Creates a temporary directory which is guaranteed to be unique (via File.createTempFile)
 	 * and ensures that the directory exists.
 	 *
 	 * Note: The caller needs to ensure that the directory is removed again after use else it

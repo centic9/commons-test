@@ -20,6 +20,8 @@ public class HeapDump {
      * @param fileName name of the heap dump file
      * @param live flag that tells whether to dump
      *             only the live objects
+     * @throws IOException If accessing the MBeanServer fails or
+     *          creation of the heap dump is not successful
      */
     public static void dumpHeap(String fileName, boolean live) throws IOException {
         // initialize hotspot diagnostic MBean

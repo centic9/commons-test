@@ -53,9 +53,9 @@ public class MockRESTServerTest {
         log.info("Had hostname: " + ipAddress + ", address-info: " + localHost);
 
         assertNotNull("Should get a local ip-address", ipAddress);
-        assertFalse("Local ip-address should not equal localhost", ipAddress.equals("localhost"));
+        assertNotEquals("Local ip-address should not equal localhost", "localhost", ipAddress);
         // cannot assert on startsWith("127.0.0") as e.g. lab13 reports an ip-address of 127.0.0.2
-        assertFalse("Local ip-address should not equal 127.0.0.1", ipAddress.equals("127.0.0.1"));
+        assertNotEquals("Local ip-address should not equal 127.0.0.1", "127.0.0.1", ipAddress);
 
         runWithHostname(ipAddress);
     }
@@ -65,7 +65,7 @@ public class MockRESTServerTest {
         assertNotNull(java.net.InetAddress.getLocalHost());
         String hostname = java.net.InetAddress.getLocalHost().getHostName();
         assertNotNull(hostname);
-        assertFalse("Local hostname should not equal localhost", hostname.equals("localhost"));
+        assertNotEquals("Local hostname should not equal localhost", "localhost", hostname);
         assertFalse("Local hostname should not start with 127.0.0", hostname.startsWith("127.0.0"));
 
         runWithHostname(hostname);
@@ -76,7 +76,7 @@ public class MockRESTServerTest {
         assertNotNull(java.net.InetAddress.getLocalHost());
         String hostname = java.net.InetAddress.getLocalHost().getCanonicalHostName();
         assertNotNull(hostname);
-        assertFalse(hostname.equals("localhost"));
+        assertNotEquals("localhost", hostname);
         assertFalse(hostname.startsWith("127.0.0"));
 
         runWithHostname(hostname);
@@ -94,7 +94,7 @@ public class MockRESTServerTest {
                 assertNotNull(inetAddress);
                 String hostname = inetAddress.getCanonicalHostName();
                 assertNotNull(hostname);
-                assertFalse("Had: " + hostname, hostname.equals("localhost"));
+                assertNotEquals("Had: " + hostname, "localhost", hostname);
                 assertFalse("Had: " + hostname, hostname.startsWith("127.0.0"));
 
                 // UrlUtils does not support IPv6 yet
@@ -107,7 +107,7 @@ public class MockRESTServerTest {
         }
     }
 
-    private void runWithHostname(String hostname) throws IOException, InterruptedException {
+    private void runWithHostname(String hostname) throws IOException {
         if(hostname.startsWith("169.254")) {
             // don't try to contact this IP-range, it is usually used for VirtualBox network interfaces that might be unavailable
             return;
@@ -146,7 +146,7 @@ public class MockRESTServerTest {
     }
 
     @Test
-    public void testExhaustPorts() throws IOException {
+    public void testExhaustPorts() {
         MockRESTServer[] servers = new MockRESTServer[100];
         try {
             for (int i = 0; i < 100; i++) {
@@ -185,7 +185,7 @@ public class MockRESTServerTest {
         final AtomicBoolean called = new AtomicBoolean();
         try (MockRESTServer server = new MockRESTServer(new Callable<NanoHTTPD.Response>() {
             @Override
-            public NanoHTTPD.Response call() throws Exception {
+            public NanoHTTPD.Response call() {
                 assertFalse("Should be called exactly once, but was already called before", called.get());
                 called.set(true);
                 return new NanoHTTPD.Response(NanoHTTPD.HTTP_OK, NanoHTTPD.MIME_HTML, "<html>1</html>");
@@ -203,7 +203,7 @@ public class MockRESTServerTest {
         final AtomicBoolean called = new AtomicBoolean();
         try (MockRESTServer server = new MockRESTServer(new Callable<NanoHTTPD.Response>() {
             @Override
-            public NanoHTTPD.Response call() throws Exception {
+            public NanoHTTPD.Response call() {
                 assertFalse("Should be called exactly once, but was already called before", called.get());
                 called.set(true);
                 throw new RuntimeException("TestException");

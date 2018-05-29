@@ -52,4 +52,9 @@ public class ThreadTestHelperTest {
 
         assertEquals(1, list.size());
 	}
+
+    @Test
+    public void testAssertNoThreadLeft() {
+        ThreadTestHelper.assertNoThreadLeft("test-error", "no thread with this name");
+    }
 }

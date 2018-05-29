@@ -1,6 +1,7 @@
 package org.dstadler.commons.testing;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -35,7 +36,7 @@ import org.dstadler.commons.logging.jdk.LoggerFactory;
             }
 
             {@literal @}Override
-            public void run(int threadNum, int iter) throws Exception {
+            public void run(int threadNum, int itNum) throws Exception {
                 // do the actual threaded work ...
             }
         });
@@ -43,7 +44,6 @@ import org.dstadler.commons.logging.jdk.LoggerFactory;
   </code>
  */
 public class ThreadTestHelper {
-
 	private static Logger log = LoggerFactory.make();
 
 	private final int threadCount;
@@ -70,7 +70,7 @@ public class ThreadTestHelper {
 	}
 
 	public void executeTest(TestRunnable run) throws Throwable {
-		log.fine("Starting thread test");
+		log.info("Starting thread test");
 
 		List<Thread> threads = new LinkedList<>();
 
@@ -152,17 +152,17 @@ public class ThreadTestHelper {
 	 *
 	 */
 	private Thread startThread(final int threadNum, final TestRunnable run) {
-		log.fine("Starting thread number: " + threadNum);
+		log.info("Starting thread number: " + threadNum);
 
 		Thread t1 = new Thread(() -> {
 			try {
-				for (int iter = 0; iter < testsPerThread && exception == null; iter++) {
-					// log.fine("Executing iteration " + iter +
+				for (int itNum = 0; itNum < testsPerThread && exception == null; itNum++) {
+					// log.info("Executing iteration " + itNum +
 					// " in thread" +
 					// Thread.currentThread().getName());
 
 					// call the actual testcode
-					run.run(threadNum, iter);
+					run.run(threadNum, itNum);
 
 					executions[threadNum]++;
 				}
@@ -175,7 +175,6 @@ public class ThreadTestHelper {
 				// log.log(Level.SEVERE, "Caught unexpected Throwable", e);
 				exception = e;
 			}
-
 		}, "ThreadTestHelper-Thread " + threadNum + ": " + run.getClass().getName());
 
 		t1.start();
@@ -195,14 +194,14 @@ public class ThreadTestHelper {
 		 *
 		 * @param threadNum
 		 *        The number of the thread executing this run()
-		 * @param iter
+		 * @param itNum
 		 *        The count of how many times this thread executed the
 		 *        method
 		 * @throws Exception Thrown on any failure during running the test
 		 *
 		 * @see java.lang.Thread#run()
 		 */
-		void run(int threadNum, int iter) throws Exception;
+		void run(int threadNum, int itNum) throws Exception;
 
 		/**
 		 * Perform any action that should be done at the end.
@@ -239,22 +238,57 @@ public class ThreadTestHelper {
 	}
 
 	/**
-	 * Wait for thread whose name contain the specified string to finish, i.e. to not appear in the
+	 * Wait for threads whose name contains the specified string to finish, i.e. to not appear in the
 	 * list of running threads any more.
 	 *
-	 * @param name The string which is matched against thread-names via thread.getName().contains(name)
+	 * @param contains The string which is matched against thread-names via thread.getName().contains(name)
 	 *
 	 * @throws InterruptedException Thrown by joining threads with the given name
 	 */
-	public static void waitForThreadToFinishSubstring(final String name) throws InterruptedException {
+	public static void waitForThreadToFinishSubstring(final String contains) throws InterruptedException {
+		waitForThreadToFinishSubstring(contains, 0);
+	}
+
+	/**
+	 * Wait some time for threads whose name contains the specified string to finish, i.e. to not appear in the
+	 * list of running threads any more.
+	 *
+	 * @param contains The string which is matched against thread-names via thread.getName().contains(name)
+	 * @param timeout The number of milliseconds to wait for the thread to finish
+	 *
+	 * @throws InterruptedException Thrown by joining threads with the given name
+	 */
+	public static void waitForThreadToFinishSubstring(final String contains, final long timeout) throws InterruptedException {
 		int count = Thread.currentThread().getThreadGroup().activeCount();
 
 		Thread[] threads = new Thread[count];
 		Thread.currentThread().getThreadGroup().enumerate(threads);
 
 		for (Thread t : threads) {
-			if (t != null && t.getName().contains(name)) {
-				t.join();
+			if (t != null && t.getName().contains(contains) && !t.getName().startsWith("SUITE-")) {
+				t.join(timeout);
+			}
+		}
+	}
+
+	/**
+	 * Check and fail if a thread which contains the given string is currently running.
+	 *
+	 * This is usually combined with waitForThreadToFinishSubstring(contains, timeout);
+	 *
+	 * @param error The error message to include in the failure.
+	 * @param contains The string to check for in thread-names.
+	 */
+	public static void assertNoThreadLeft(final String error, final String contains) {
+		int count = Thread.currentThread().getThreadGroup().activeCount();
+
+		Thread[] threads = new Thread[count];
+		Thread.currentThread().getThreadGroup().enumerate(threads);
+
+		for (Thread t : threads) {
+			if (t != null && t.getName().contains(contains) && !t.getName().startsWith("SUITE-")) {
+				log.info("ThreadDump: " + new ThreadDump(true, true).toString());
+				fail(error + t);
 			}
 		}
 	}

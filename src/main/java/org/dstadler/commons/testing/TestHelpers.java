@@ -77,6 +77,8 @@ public class TestHelpers {
 		// not equals to a different type of object
 		assertFalse("Object should not be equal to an arbitrary string in EqualsTest!", obj
 						.equals("TestString"));	// NOPMD
+		assertFalse("Object should not be equal to an arbitrary string in EqualsTest!", "TestString"
+						.equals(obj));	// NOPMD
 
 		// then test some things with another object that should be equal
 
@@ -154,10 +156,9 @@ public class TestHelpers {
 				0 != notequal.compareTo(null));
 
 		// not equals to a different type of object
-		/*
-		 * assertFalse("Object should not be equal to an arbitrary string in CompareToTest!" , 0 ==
-		 * obj.compareTo("TestString"));
-		 */
+		/* cannot happen due to Generics
+		assertFalse("Object should not be equal to an arbitrary string in CompareToTest!" , 0 ==
+				obj.compareTo("TestString"));*/
 
 		// then test some things with another object that should be equal
 
@@ -170,7 +171,7 @@ public class TestHelpers {
 				.compareTo(notequal));
 		assertFalse("Symmetric: Non-equals-object should NOT be equal to object in CompareToTest!",		// NOPMD
 				0 == notequal.compareTo(obj));
-		assertEquals("Symnmetric: Comparing object and non-equal-object in both directions should lead to the same result.",
+		assertEquals("Symmetric: Comparing object and non-equal-object in both directions should lead to the same result.",
 				signum(obj.compareTo(notequal)), (-1)*signum(notequal.compareTo(obj)));
 
 		// transitive: if a.equals(b) and b.equals(c) then a.equals(c)
@@ -247,9 +248,9 @@ public class TestHelpers {
 				0 != comparator.compare(notequal, null));*/
 
 		// not equals to a different type of object
-		/*
-		 * assertFalse("Object should not be equal to an arbitrary string in ComparatorTest!" , 0 ==
-		 * obj, "TestString"));
+		/* Cannot happen due to Generics
+		assertFalse("Object should not be equal to an arbitrary string in ComparatorTest!" , 0 ==
+			obj, "TestString"));
 		 */
 
 		// then test some things with another object that should be equal
@@ -263,7 +264,7 @@ public class TestHelpers {
 				, notequal));
 		assertFalse("Symmetric: Non-equals-object should NOT be equal to object in ComparatorTest!",	// NOPMD
 				0 == comparator.compare(notequal, obj));
-		assertEquals("Symnmetric: Comparing object and non-equal-object in both directions should lead to the same result.",
+		assertEquals("Symmetric: Comparing object and non-equal-object in both directions should lead to the same result.",
 				signum(comparator.compare(obj, notequal)), (-1)*signum(comparator.compare(notequal, obj)));
 
 		// transitive: if a.equals(b) and b.equals(c) then a.equals(c)
@@ -383,7 +384,7 @@ public class TestHelpers {
 		// the other way around is not required,
 		// different objects can have the same hashCode!!
 		assertEquals(
-						"Equal Assert failed, but input to HashCodeTest should be two equal objects! Check if the class implements equals() as well to fullfill this contract",
+						"Equal Assert failed, but input to HashCodeTest should be two equal objects! Check if the class implements equals() as well to fulfill this contract",
 						obj, equ);
 		assertEquals("Equal objects should have equal hashCode() by Java contract!", obj.hashCode(), equ
 				.hashCode());
@@ -593,7 +594,7 @@ public class TestHelpers {
 	}
 
 	/**
-	 * Creates a temporary directory which is guaranted to be unique (via File.createTempFile)
+	 * Creates a temporary directory which is guaranteed to be unique (via File.createTempFile)
 	 * and ensures that the directory exists.
 	 *
 	 * Note: The caller needs to ensure that the directory is removed again after use else it

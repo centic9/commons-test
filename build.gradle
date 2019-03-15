@@ -36,7 +36,7 @@ dependencies {
 	compile 'junit:junit:4.12'
 
 	testCompile 'org.apache.commons:commons-email:1.5'
-    testCompile 'javax.activation:activation:1.1.1'     // needed for JDK 11
+    testCompile 'com.sun.activation:javax.activation:1.2.0'     // needed for JDK 11
 }
 
 wrapper {

@@ -23,7 +23,7 @@ configurations {
 
 dependencies {
 	compile 'org.apache.commons:commons-lang3:3.8.1'
-	compile 'org.dstadler:commons-dost:1.0.0.26'
+	compile 'org.dstadler:commons-dost:1.0.0.27'
 
 	// dumbster is somewhat broken, but we use it in SafeCloseSmtpServer...
     // dumbster includes javax.mail-api 1.3.2, but this has no jar?!
@@ -39,7 +39,7 @@ dependencies {
     testCompile 'javax.activation:activation:1.1.1'     // needed for JDK 11
 }
 
-task wrapper(type: Wrapper) {
+wrapper {
     gradleVersion = '4.10.3'
 }
 

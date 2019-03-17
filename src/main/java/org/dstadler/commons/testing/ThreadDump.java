@@ -21,8 +21,8 @@ public class ThreadDump {
 
 	/**
 	 * Creates a Thread Dump of all Java Threads
-	 * @param  lockedMonitors if <tt>true</tt>, dump all locked monitors.
-	 * @param  lockedSynchronizers if <tt>true</tt>, dump all locked
+	 * @param  lockedMonitors if <code>true</code>, dump all locked monitors.
+	 * @param  lockedSynchronizers if <code>true</code>, dump all locked
 	 *             ownable synchronizers.
 	 */
 	public ThreadDump(boolean lockedMonitors, boolean lockedSynchronizers) {

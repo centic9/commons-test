@@ -23,25 +23,25 @@ import org.dstadler.commons.logging.jdk.LoggerFactory;
  *
  * Sample usage is as follows:
  *
- * <code>
-    {@literal @}Test
-    public void testMultipleThreads() throws Throwable {
-        ThreadTestHelper helper =
-            new ThreadTestHelper(NUMBER_OF_THREADS, NUMBER_OF_TESTS);
+ * <pre>
+ {@literal @}Test
+ public void testMultipleThreads() throws Throwable {
+ ThreadTestHelper helper =
+ new ThreadTestHelper(NUMBER_OF_THREADS, NUMBER_OF_TESTS);
 
-        helper.executeTest(new ThreadTestHelper.TestRunnable() {
-            {@literal @}Override
-            public void doEnd(int threadNum) throws Exception {
-                // do stuff at the end ...
-            }
+ helper.executeTest(new ThreadTestHelper.TestRunnable() {
+ {@literal @}Override
+ public void doEnd(int threadNum) throws Exception {
+ // do stuff at the end ...
+ }
 
-            {@literal @}Override
-            public void run(int threadNum, int itNum) throws Exception {
-                // do the actual threaded work ...
-            }
-        });
-    }
-  </code>
+ {@literal @}Override
+ public void run(int threadNum, int itNum) throws Exception {
+ // do the actual threaded work ...
+ }
+ });
+ }
+ </pre>
  */
 public class ThreadTestHelper {
 	private static Logger log = LoggerFactory.make();
@@ -50,7 +50,7 @@ public class ThreadTestHelper {
 	private final int testsPerThread;
 
 	private volatile Throwable exception = null;
-	private int executions[];
+	private int[] executions;
 
 	/**
 	 * Initialize the class with the number of tests that should be executed
@@ -161,7 +161,7 @@ public class ThreadTestHelper {
 					// " in thread" +
 					// Thread.currentThread().getName());
 
-					// call the actual testcode
+					// call the actual test code
 					run.run(threadNum, itNum);
 
 					executions[threadNum]++;
@@ -213,7 +213,9 @@ public class ThreadTestHelper {
 		 *        The number of the thread executing this doEnd()
 		 * @throws Exception Thrown on any failure during running the test
 		 */
-		void doEnd(int threadNum) throws Exception;
+		default void doEnd(int threadNum) throws Exception {
+			// default empty implementation as this is often not needed
+		}
 	}
 
 	/**

@@ -157,7 +157,7 @@ public class TestHelpersTest {
             return new CloneableImplementation();
         }
 
-        @SuppressWarnings({"EqualsWhichDoesntCheckParameterClass", "Contract"})
+        @SuppressWarnings({"EqualsWhichDoesntCheckParameterClass"})
         @Override
         public boolean equals(Object obj) {
             return true;

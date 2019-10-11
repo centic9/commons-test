@@ -17,12 +17,12 @@ public class ThreadTestHelperTest {
         final AtomicInteger endCount = new AtomicInteger();
         helper.executeTest(new ThreadTestHelper.TestRunnable() {
             @Override
-            public void doEnd(int threadNum) throws Exception {
+            public void doEnd(int threadNum) {
                 endCount.incrementAndGet();
             }
 
             @Override
-            public void run(int threadNum, int iter) throws Exception {
+            public void run(int threadNum, int iter) {
                 count.incrementAndGet();
             }
         });

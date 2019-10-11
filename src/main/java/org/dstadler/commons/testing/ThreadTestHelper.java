@@ -24,21 +24,24 @@ import org.dstadler.commons.logging.jdk.LoggerFactory;
  * Sample usage is as follows:
  *
  * <pre>
+  private static final int NUMBER_OF_THREADS = 10;
+  private static final int NUMBER_OF_TESTS = 100;
+
  {@literal @}Test
- public void testMultipleThreads() throws Throwable {
- ThreadTestHelper helper =
- new ThreadTestHelper(NUMBER_OF_THREADS, NUMBER_OF_TESTS);
+  public void testMultipleThreads() throws Throwable {
+  ThreadTestHelper helper =
+      new ThreadTestHelper(NUMBER_OF_THREADS, NUMBER_OF_TESTS);
 
- helper.executeTest(new ThreadTestHelper.TestRunnable() {
+  helper.executeTest(new ThreadTestHelper.TestRunnable() {
  {@literal @}Override
- public void doEnd(int threadNum) throws Exception {
- // do stuff at the end ...
- }
+  public void doEnd(int threadNum) throws Exception {
+    // do stuff at the end ...
+  }
 
  {@literal @}Override
- public void run(int threadNum, int itNum) throws Exception {
- // do the actual threaded work ...
- }
+  public void run(int threadNum, int itNum) throws Exception {
+    // do the actual threaded work ...
+  }
  });
  }
  </pre>
@@ -189,7 +192,7 @@ public class ThreadTestHelper {
 		 * to create a thread, starting the thread causes the object's <code>run</code> method to be called in that separately
 		 * executing
 		 * thread.
-		 * <p>
+		 *
 		 * The general contract of the method <code>run</code> is that it may take any action whatsoever.
 		 *
 		 * @param threadNum
@@ -213,6 +216,7 @@ public class ThreadTestHelper {
 		 *        The number of the thread executing this doEnd()
 		 * @throws Exception Thrown on any failure during running the test
 		 */
+		@SuppressWarnings("RedundantThrows")
 		default void doEnd(int threadNum) throws Exception {
 			// default empty implementation as this is often not needed
 		}

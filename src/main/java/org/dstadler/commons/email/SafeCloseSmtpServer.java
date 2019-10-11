@@ -34,6 +34,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -130,7 +131,7 @@ public final class SafeCloseSmtpServer implements Runnable {
 					}
 
 					// Get the input and output streams
-					BufferedReader input = new BufferedReader(new InputStreamReader(socket.getInputStream(), "UTF-8"));         // NOSONAR - test class works only locally anyway
+					BufferedReader input = new BufferedReader(new InputStreamReader(socket.getInputStream(), StandardCharsets.UTF_8));         // NOSONAR - test class works only locally anyway
 					PrintWriter out = new PrintWriter(socket.getOutputStream());       // NOSONAR - test class works only locally anyway
 
 					synchronized (this) {

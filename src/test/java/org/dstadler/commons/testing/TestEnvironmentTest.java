@@ -77,7 +77,7 @@ public class TestEnvironmentTest {
     }
 
     @Test
-    public void testGetTestDirectory() throws Exception {
+    public void testGetTestDirectory() {
         File directory = TestEnvironment.getTestDirectory(TestEnvironment.class);
         assertNotNull(directory);
         assertFalse(directory.exists());

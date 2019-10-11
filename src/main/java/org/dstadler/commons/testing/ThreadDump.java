@@ -92,16 +92,14 @@ public class ThreadDump {
 				LockInfo lockInfo = info.getLockInfo();
 				long lockId = lockInfo.getIdentityHashCode();
 				switch (ts) {
-				case BLOCKED:
-					sb.append("\t- waiting to lock ").append('<').append(toHexString(lockId)).append("> (a ").append(lockInfo.getClassName()).append(")\n");
-					break;
-				case WAITING:
-					sb.append("\t- parking to wait for ").append('<').append(toHexString(lockId)).append("> (a ").append(lockInfo.getClassName()).append(")\n");
-					break;
-				case TIMED_WAITING:
-					sb.append("\t- parking to wait for ").append('<').append(toHexString(lockId)).append("> (a ").append(lockInfo.getClassName()).append(")\n");
-					break;
-				default:
+					case BLOCKED:
+						sb.append("\t- waiting to lock ").append('<').append(toHexString(lockId)).append("> (a ").append(lockInfo.getClassName()).append(")\n");
+						break;
+					case WAITING:
+					case TIMED_WAITING:
+						sb.append("\t- parking to wait for ").append('<').append(toHexString(lockId)).append("> (a ").append(lockInfo.getClassName()).append(")\n");
+						break;
+					default:
 				}
 			}
 

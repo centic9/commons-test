@@ -21,15 +21,15 @@ public class PrivateConstructorCoverage {
 	 *
 	 * Template:
 	 *
-	 * <code>
+	 * <pre>
 
-	// helper method to get coverage of the unused constructor
+	 // helper method to get coverage of the unused constructor
 	{@literal @}Test
-	public void testPrivateConstructor() throws Exception {
-		org.dstadler.commons.testing.PrivateConstructorCoverage.executePrivateConstructor(yourclass.class);
-	}
+	 public void testPrivateConstructor() throws Exception {
+	     org.dstadler.commons.testing.PrivateConstructorCoverage.executePrivateConstructor(yourclass.class);
+	 }
 
-	 </code>
+	 </pre>
 	 *
 	 * @param <T> The type of class to cover.
 	 * @param targetClass The class to cover.

@@ -14,6 +14,8 @@ It covers areas that I miss in JUnit itself e.g. for verifying compare()/hashCod
 * ThreadTestHelpers - easily run unit tests multiple times in parallel to ensure the code does not contain hidden race conditions
 * MemoryLeakVerifier - a simple way of adding memory leak assertions to unit tests
 * TestEnvironment - handling temporary files/directories in a clean way, ensure that files are not locked any more at the end of the test
+* PrivateConstructorCoverage - use this if you would like to get 100% coverage of classes with private constructors
+* ThreadDump - get a printable output of all stack-traces similar to the output of the `jstack` tool
 
 ## Use it
 

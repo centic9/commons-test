@@ -36,7 +36,7 @@ It covers areas that I miss in JUnit itself e.g. for verifying compare()/hashCod
 
 ### Release it
 
-    ./gradlew release
+    ./gradlew release closeAndReleaseRepository
 
 #### Licensing
 * commons-test is licensed under the [BSD 2-Clause License].

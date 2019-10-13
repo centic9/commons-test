@@ -4,6 +4,7 @@ import org.dstadler.commons.http.NanoHTTPD;
 import org.dstadler.commons.logging.jdk.LoggerFactory;
 import org.dstadler.commons.net.UrlUtils;
 import org.junit.After;
+import org.junit.Assume;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -54,6 +55,11 @@ public class MockRESTServerTest {
 
         assertNotNull("Should get a local ip-address", ipAddress);
         assertNotEquals("Local ip-address should not equal localhost", "localhost", ipAddress);
+
+        // Travis-CI reports 127.0.0.1 for some reason
+        Assume.assumeFalse("Travis-CI reports an unexpected ipAddress",
+                "true".equals(System.getenv("TRAVIS")) && "127.0.0.1".equals(ipAddress));
+
         // cannot assert on startsWith("127.0.0") as e.g. lab13 reports an ip-address of 127.0.0.2
         assertNotEquals("Local ip-address should not equal 127.0.0.1", "127.0.0.1", ipAddress);
 
@@ -65,6 +71,11 @@ public class MockRESTServerTest {
         assertNotNull(java.net.InetAddress.getLocalHost());
         String hostname = java.net.InetAddress.getLocalHost().getHostName();
         assertNotNull(hostname);
+
+        // Travis-CI reports 127.0.0.1 for some reason
+        Assume.assumeFalse("Travis-CI reports an unexpected hostname",
+                "true".equals(System.getenv("TRAVIS")) && "localhost".equals(hostname));
+
         assertNotEquals("Local hostname should not equal localhost", "localhost", hostname);
         assertFalse("Local hostname should not start with 127.0.0", hostname.startsWith("127.0.0"));
 
@@ -76,13 +87,18 @@ public class MockRESTServerTest {
         assertNotNull(java.net.InetAddress.getLocalHost());
         String hostname = java.net.InetAddress.getLocalHost().getCanonicalHostName();
         assertNotNull(hostname);
+
+        // Travis-CI reports 127.0.0.1 for some reason
+        Assume.assumeFalse("Travis-CI reports an unexpected hostname",
+                "true".equals(System.getenv("TRAVIS")) && "localhost".equals(hostname));
+
         assertNotEquals("localhost", hostname);
         assertFalse(hostname.startsWith("127.0.0"));
 
         runWithHostname(hostname);
     }
 
-    @Ignore("Fails in some virtual CI environments")
+    @Ignore("Fails in some environments")
     @Test
     public void testAllNetworkInterfaces() throws Exception {
         final Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();

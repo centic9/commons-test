@@ -17,6 +17,7 @@ import java.util.logging.Logger;
 
 import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 import org.dstadler.commons.logging.jdk.LoggerFactory;
+import org.dstadler.commons.util.ThreadDump;
 
 /**
  * Helper class to test with many threads.

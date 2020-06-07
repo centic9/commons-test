@@ -1,5 +1,5 @@
 [![Build Status](https://travis-ci.org/centic9/commons-test.svg)](https://travis-ci.org/centic9/commons-test) [![Gradle Status](https://gradleupdate.appspot.com/centic9/commons-test/status.svg?branch=master)](https://gradleupdate.appspot.com/centic9/commons-test/status)
-[![Release](https://img.shields.io/github/release/centic9/commons-test.svg)](https://github.com/centic9/commons-test/releases)
+[![Release](https://img.shields.io/github/v/release/centic9/commons-test.svg)](https://github.com/centic9/commons-test/releases)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.dstadler/commons-test/badge.svg?style=flat)](https://maven-badges.herokuapp.com/maven-central/org.dstadler/commons-test) [![Maven Central](https://img.shields.io/maven-central/v/org.dstadler/commons-test.svg)](https://maven-badges.herokuapp.com/maven-central/org.dstadler/commons-test)
 
 This is a small library of code-pieces that I find useful when writing tests.
@@ -36,10 +36,10 @@ It covers areas that I miss in JUnit itself e.g. for verifying compare()/hashCod
 
 ### Release it
 
-    ./gradlew release && ./gradlew closeAndReleaseRepository
+    ./gradlew --console=plain release && ./gradlew closeAndReleaseRepository
 
 #### Licensing
 * commons-test is licensed under the [BSD 2-Clause License].
 * A few pieces are imported from other sources, the source-files contain the necessary license pieces/references.
 
-[BSD 2-Clause License]: http://www.opensource.org/licenses/bsd-license.php
+[BSD 2-Clause License]: https://www.opensource.org/licenses/bsd-license.php

@@ -82,12 +82,18 @@ public class MemoryLeakVerifier {
 	}
 
 	private static void assertGarbageCollected(WeakReference<Object> ref, int maxIterations, boolean dumpHeap) throws InterruptedException {
+		// exit early if the ref is already collected from before
+		if(ref.get() == null) {
+			return;
+		}
+
 	    Runtime runtime = Runtime.getRuntime();
 	    for (int i = 0; i < maxIterations; i++) {
 	        runtime.runFinalization();
 	        runtime.gc();
-	        if (ref.get() == null)
-	            break;
+	        if (ref.get() == null) {
+				return;
+			}
 
 	        // Pause for a while and then go back around the loop to try again...
 			//EventQueue.invokeAndWait(Procedure.NoOp); // Wait for the AWT event queue to have completed processing
@@ -102,6 +108,7 @@ public class MemoryLeakVerifier {
 				throw new IllegalStateException(e);
 			}
 		}
+
 	    assertNull("Object should not exist after " + MAX_GC_ITERATIONS + " collections, but still had: " + ref.get() + (dumpHeap ? ", a heapdump was written to " + HEAP_DUMP_FILE_NAME : ""),
 	    		ref.get());
 	}

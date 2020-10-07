@@ -55,4 +55,14 @@ public class MemoryLeakVerifierTest {
 			assertTrue("HeapDumpFile at " + heapDumpFile.getAbsolutePath() + " could not be deleted", heapDumpFile.delete());
 		}
 	}
+
+	@Test
+	public void testNoMemoryLeakManyObjects() {
+		MemoryLeakVerifier verifier = new MemoryLeakVerifier();
+		for(int i = 0;i < 5000;i++) {
+			verifier.addObject(new Object());
+		}
+
+		verifier.assertGarbageCollected();
+	}
 }

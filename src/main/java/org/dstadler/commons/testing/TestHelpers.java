@@ -1,5 +1,6 @@
 package org.dstadler.commons.testing;
 
+import static java.lang.Integer.signum;
 import static org.junit.Assert.*;
 
 import java.awt.GraphicsEnvironment;
@@ -285,16 +286,6 @@ public class TestHelpers {
 		assertEquals("compare(null,null) should have 0 as compare-result", 0, comparator.compare(null, null));
 		assertTrue("compare(obj,null) should not have 0 as compare-result", comparator.compare(obj, null) != 0);
 		assertTrue("compare(null,obj) should not have 0 as compare-result", comparator.compare(null, obj) != 0);
-	}
-
-	private static int signum(int i) {
-		if(i < 0) {
-			return -1;
-		} else if (i > 0) {
-			return 1;
-		}
-
-		return 0;
 	}
 
 	/**

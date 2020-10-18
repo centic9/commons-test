@@ -17,7 +17,7 @@ public class TestHelpersTest {
 
     @Test
     public void testEqualsTest() {
-        //noinspection RedundantStringConstructorCall
+        //noinspection StringOperationCanBeSimplified
         TestHelpers.EqualsTest(new String("str"), "str", "str2");
     }
 
@@ -30,7 +30,7 @@ public class TestHelpersTest {
 
     @Test
     public void testComparatorTest() {
-        //noinspection RedundantStringConstructorCall
+        //noinspection StringOperationCanBeSimplified
         TestHelpers.ComparatorTest(new Comparator<String>() {
 
             @Override
@@ -50,7 +50,7 @@ public class TestHelpersTest {
 
         }, new String("str"), "str", "str2", false);
 
-        //noinspection RedundantStringConstructorCall
+        //noinspection StringOperationCanBeSimplified
         TestHelpers.ComparatorTest(new Comparator<String>() {
 
             @Override
@@ -84,9 +84,9 @@ public class TestHelpersTest {
 
     @Test
     public void testHashCodeTest() {
-        //noinspection RedundantStringConstructorCall
+        //noinspection StringOperationCanBeSimplified
         TestHelpers.HashCodeTest(new String("str"), "str");
-        //noinspection RedundantStringConstructorCall
+        //noinspection StringOperationCanBeSimplified
         TestHelpers.HashCodeTest(new String("other"), "other");
     }
 
@@ -150,7 +150,7 @@ public class TestHelpersTest {
         TestHelpers.assumeCanShowDialogs();
     }
 
-    public final class CloneableImplementation implements Cloneable {
+    public static final class CloneableImplementation implements Cloneable {
         @SuppressWarnings("MethodDoesntCallSuperMethod")
         @Override
         public Object clone() {

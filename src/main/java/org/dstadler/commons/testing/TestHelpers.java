@@ -265,14 +265,15 @@ public class TestHelpers {
 				, notequal));
 		assertFalse("Symmetric: Non-equals-object should NOT be equal to object in ComparatorTest!",	// NOPMD
 				0 == comparator.compare(notequal, obj));
+		int signumObjEqual = signum(comparator.compare(obj, notequal));
 		assertEquals("Symmetric: Comparing object and non-equal-object in both directions should lead to the same result.",
-				signum(comparator.compare(obj, notequal)), (-1)*signum(comparator.compare(notequal, obj)));
+				signumObjEqual, (-1)*signum(comparator.compare(notequal, obj)));
 
 		// transitive: if a.equals(b) and b.equals(c) then a.equals(c)
 		// not tested right now
 
 		assertEquals("Congruence: Comparing object and non-equal-object should have the same result as comparing the equal object and the non-equal-object",
-				signum(comparator.compare(obj, notequal)), signum(comparator.compare(equal, notequal)));
+				signumObjEqual, signum(comparator.compare(equal, notequal)));
 
 		if(notEqualIsLess) {
 			assertTrue("Item 'notequal' should be less than item 'equal' in ComparatorTest, but compare was: " + comparator.compare(notequal, obj),
@@ -399,7 +400,7 @@ public class TestHelpers {
 		assertEquals(enumtype, Enum.valueOf(enumclass, element));
 
 		// check values()
-		Method m = enumclass.getMethod("values", (Class[]) null);
+		Method m = enumclass.getMethod("values", (Class<?>[]) null);
 		Object obj = m.invoke(enumtype, (Object[]) null);
 		assertNotNull(obj);
 		assertTrue(obj instanceof Object[]);
@@ -579,7 +580,7 @@ public class TestHelpers {
 	 * Helper method which uses assume to not run tests if the current JVM runs in headless mode.
 	 */
 	public static void assumeCanShowDialogs() {
-		GraphicsEnvironment.getLocalGraphicsEnvironment();
+		assertNotNull(GraphicsEnvironment.getLocalGraphicsEnvironment());
 		Assume.assumeFalse("Can not run some tests when tests are executed in headless mode",
 				GraphicsEnvironment.isHeadless());
 	}

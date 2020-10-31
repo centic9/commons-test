@@ -38,7 +38,15 @@ It covers areas that I miss in JUnit itself e.g. for verifying compare()/hashCod
 
     ./gradlew --console=plain release && ./gradlew closeAndReleaseRepository
 
-#### Licensing
+* This should automatically release the new version on MavenCentral
+* Afterwards go to the [Github releases page](https://github.com/centic9/commons-test/releases) and add release-notes
+
+## Support this project
+
+If you find this library useful and would like to support it, you can [Sponsor the author](https://github.com/sponsors/centic9)
+
+## Licensing
+
 * commons-test is licensed under the [BSD 2-Clause License].
 * A few pieces are imported from other sources, the source-files contain the necessary license pieces/references.
 

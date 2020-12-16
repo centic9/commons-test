@@ -70,7 +70,7 @@ public final class SafeCloseSmtpServer implements Runnable {
 	/**
 	 * Stores all of the email received since this instance started up.
 	 */
-	private List<SmtpMessage> receivedMail;
+	private final List<SmtpMessage> receivedMail;
 
 	/**
 	 * Indicates whether this server is stopped or not.
@@ -87,7 +87,7 @@ public final class SafeCloseSmtpServer implements Runnable {
 	 */
 	private final int port;
 
-	private Semaphore semaphore = new Semaphore(MAXIMUM_CONCURRENT_READERS);
+	private final Semaphore semaphore = new Semaphore(MAXIMUM_CONCURRENT_READERS);
 
 	/**
 	 * private Constructor to only create instances in the static start() method below.
@@ -170,7 +170,7 @@ public final class SafeCloseSmtpServer implements Runnable {
 	 *
 	 * @return true if the server has been sent a stop signal, false otherwise
 	 */
-	public synchronized boolean isStopped() {
+	public boolean isStopped() {
 		return stopped;
 	}
 
@@ -178,14 +178,22 @@ public final class SafeCloseSmtpServer implements Runnable {
 	 * Stops the server. Server is shutdown after processing of the current request is complete.
 	 */
 	public synchronized void stop() {
+		if(isStopped()) {
+			return;
+		}
+
 		// Mark us closed
 		stopped = true;
+
 		try {
 			// Kick the server accept loop
 			serverSocket.close();
 
 			// acquire all semaphores so that we wait for all connections to finish before we report back as closed
 			semaphore.acquireUninterruptibly(MAXIMUM_CONCURRENT_READERS);
+
+			// free them again to have a clean state at the end
+			semaphore.release(MAXIMUM_CONCURRENT_READERS);
 		} catch (IOException e) {
 			log.log(Level.SEVERE, "Caught exception: ", e);
 		}

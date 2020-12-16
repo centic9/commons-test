@@ -32,7 +32,7 @@ import com.dumbster.smtp.SmtpMessage;
  * @author dominik.stadler
  *
  */
-public class MockSMTPServer {
+public class MockSMTPServer implements AutoCloseable {
 	// The range of ports that we try to use for the listening.
 	private static final int PORT_RANGE_START = 15110;
 	private static final int PORT_RANGE_END = 15119;
@@ -116,5 +116,11 @@ public class MockSMTPServer {
 		}
 
 		return msgs.iterator();
+	}
+
+	@Override
+	public void close() {
+		// simply call stop() which is kept for backwards compatibility
+		stop();
 	}
 }

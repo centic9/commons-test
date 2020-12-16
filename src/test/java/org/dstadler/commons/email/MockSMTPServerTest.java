@@ -63,6 +63,9 @@ public class MockSMTPServerTest {
 			assertEquals(1, server.getMessageCount());
 			assertNotNull(server.getMessages());
 			assertNotNull(server.getMessages().next());
+
+			verifier.addObject(server.getMessages());
+			verifier.addObject(server.getMessages().next());
 		}
 	}
 }

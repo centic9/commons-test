@@ -35,8 +35,8 @@ public class MockRESTServer implements Closeable {
     private static final int PORT_RANGE_START = 15100;
     private static final int PORT_RANGE_END = 15110;
 
-    private NanoHTTPD httpd;
-    private int port;
+    private final NanoHTTPD httpd;
+    private final int port;
 
     /**
      * Create a mock server that responds to REST requests with the given HTTP Status Code.

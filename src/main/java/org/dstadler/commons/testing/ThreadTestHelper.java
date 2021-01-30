@@ -48,13 +48,13 @@ import org.dstadler.commons.util.ThreadDump;
  </pre>
  */
 public class ThreadTestHelper {
-	private static Logger log = LoggerFactory.make();
+	private static final Logger log = LoggerFactory.make();
 
 	private final int threadCount;
 	private final int testsPerThread;
 
 	private volatile Throwable exception = null;
-	private int[] executions;
+	private final int[] executions;
 
 	/**
 	 * Initialize the class with the number of tests that should be executed

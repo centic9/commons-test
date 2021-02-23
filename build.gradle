@@ -35,7 +35,7 @@ dependencies {
 	compile 'dumbster:dumbster:1.6'
 
 	// for TestHelpers we need junit during normal compile...
-	compile 'junit:junit:4.13.1'
+	compile 'junit:junit:4.13.2'
 
 	testCompile 'org.apache.commons:commons-email:1.5'
     testCompile 'com.sun.activation:javax.activation:1.2.0'     // needed for JDK 11

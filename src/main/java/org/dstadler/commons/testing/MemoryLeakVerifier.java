@@ -110,7 +110,7 @@ public class MemoryLeakVerifier {
 		}
 
 	    assertNull("Object should not exist after " + MAX_GC_ITERATIONS +
-						" collections, but still had: " + ref.get() + (dumpHeap ?
+						" collections" + (dumpHeap ?
 						", a heap-dump was written to " + HEAP_DUMP_FILE_NAME : ""),
 	    		ref.get());
 	}

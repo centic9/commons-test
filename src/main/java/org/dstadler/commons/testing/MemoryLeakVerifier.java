@@ -105,11 +105,13 @@ public class MemoryLeakVerifier {
 			try {
 				HeapDump.dumpHeap(HEAP_DUMP_FILE_NAME, true);
 			} catch (IOException e) {
-				throw new IllegalStateException(e);
+				throw new IllegalStateException("Failed to write heap-dump to " + HEAP_DUMP_FILE_NAME, e);
 			}
 		}
 
-	    assertNull("Object should not exist after " + MAX_GC_ITERATIONS + " collections, but still had: " + ref.get() + (dumpHeap ? ", a heapdump was written to " + HEAP_DUMP_FILE_NAME : ""),
+	    assertNull("Object should not exist after " + MAX_GC_ITERATIONS +
+						" collections, but still had: " + ref.get() + (dumpHeap ?
+						", a heap-dump was written to " + HEAP_DUMP_FILE_NAME : ""),
 	    		ref.get());
 	}
 }

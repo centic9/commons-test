@@ -36,6 +36,9 @@ public class MemoryLeakVerifierTest {
 
 	@Test
 	public void testWithMemoryLeakAndHeapDump() {
+		final File heapDumpFile = new File(MemoryLeakVerifier.HEAP_DUMP_FILE_NAME);
+		assertTrue(!heapDumpFile.exists() || heapDumpFile.delete());
+
 		Object obj = new Object();
 
 		MemoryLeakVerifier verifier = new MemoryLeakVerifier();
@@ -43,13 +46,20 @@ public class MemoryLeakVerifierTest {
 
 		verifier.addObject(obj);
 
+		expectMemoryLeaks(heapDumpFile, verifier);
+
+		// in some other tests we got an IllegalStateException because writing
+		// the heap-dump a 2nd time failed because the file already exists, but here
+		// we seem to be able to overwrite it
+		expectMemoryLeaks(heapDumpFile, verifier);
+	}
+
+	private void expectMemoryLeaks(File heapDumpFile, MemoryLeakVerifier verifier) {
 		try {
 			verifier.assertGarbageCollected(3);
 			fail("Should report a memory leak here");
 		} catch (AssertionError e) {
 			TestHelpers.assertContains(e, "Object should not exist");
-
-			final File heapDumpFile = new File(MemoryLeakVerifier.HEAP_DUMP_FILE_NAME);
 
 			assertTrue("HeapDumpFile was not found at " + heapDumpFile.getAbsolutePath(), heapDumpFile.exists());
 			assertTrue("HeapDumpFile at " + heapDumpFile.getAbsolutePath() + " could not be deleted", heapDumpFile.delete());

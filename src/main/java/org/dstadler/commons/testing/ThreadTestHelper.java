@@ -91,7 +91,7 @@ public class ThreadTestHelper {
 
 		// report exceptions if there were any
 		if (exception != null) {
-			throw exception;
+			throw new Exception("Caught an exception in one of the threads", exception);
 		}
 
 		// make sure the resulting number of executions is correct
@@ -294,7 +294,7 @@ public class ThreadTestHelper {
 
 		for (Thread t : threads) {
 			if (t != null && t.getName().contains(contains) && !t.getName().startsWith("SUITE-")) {
-				log.info("ThreadDump: " + new ThreadDump(true, true).toString());
+				log.info("ThreadDump: " + new ThreadDump(true, true));
 				fail(error + t);
 			}
 		}

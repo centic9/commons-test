@@ -93,6 +93,11 @@ artifacts {
 }
 
 signing {
+	setRequired {
+		// signing is only required if this is a release version
+		// and the artifacts are to be published
+		gradle.taskGraph.allTasks.any { it instanceof PublishToMavenRepository }
+	}
     sign configurations.archives
 }
 
@@ -120,7 +125,7 @@ uploadArchives {
       pom.project {
         name 'Common Test Utilities'
         packaging 'jar'
-        // optionally artifactId can be defined here 
+        // optionally artifactId can be defined here
         description 'Common testing utilities I find useful in many of my projects.'
         url 'https://github.com/centic9/commons-test'
 

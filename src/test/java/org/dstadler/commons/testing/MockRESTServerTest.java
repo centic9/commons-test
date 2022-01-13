@@ -59,6 +59,9 @@ public class MockRESTServerTest {
         // Travis-CI reports 127.0.0.1 for some reason
         Assume.assumeFalse("Travis-CI reports an unexpected ipAddress",
                 "true".equals(System.getenv("TRAVIS")) && "127.0.0.1".equals(ipAddress));
+        // Github Actions reports an inaccessible hostname
+        Assume.assumeFalse("Github Actions report an unexpected ipAddress",
+                "true".equals(System.getenv("GITHUB_ACTIONS")));
 
         // cannot assert on startsWith("127.0.0") as e.g. lab13 reports an ip-address of 127.0.0.2
         assertNotEquals("Local ip-address should not equal 127.0.0.1", "127.0.0.1", ipAddress);
@@ -75,6 +78,9 @@ public class MockRESTServerTest {
         // Travis-CI reports 127.0.0.1 for some reason
         Assume.assumeFalse("Travis-CI reports an unexpected hostname",
                 "true".equals(System.getenv("TRAVIS")) && "localhost".equals(hostname));
+		// Github Actions reports an inaccessible hostname
+		Assume.assumeFalse("Github Actions report an unexpected ipAddress",
+				"true".equals(System.getenv("GITHUB_ACTIONS")));
 
         assertNotEquals("Local hostname should not equal localhost", "localhost", hostname);
         assertFalse("Local hostname should not start with 127.0.0", hostname.startsWith("127.0.0"));
@@ -91,6 +97,9 @@ public class MockRESTServerTest {
         // Travis-CI reports 127.0.0.1 for some reason
         Assume.assumeFalse("Travis-CI reports an unexpected hostname",
                 "true".equals(System.getenv("TRAVIS")) && "localhost".equals(hostname));
+		// Github Actions reports an inaccessible hostname
+		Assume.assumeFalse("Github Actions report an unexpected ipAddress",
+				"true".equals(System.getenv("GITHUB_ACTIONS")));
 
         assertNotEquals("localhost", hostname);
         assertFalse(hostname.startsWith("127.0.0"));

@@ -31,12 +31,12 @@ It covers areas that I miss in JUnit itself e.g. for verifying compare()/hashCod
 
 ### Grab it
 
-    git clone git://github.com/centic9/commons-test
+    git clone https://github.com/centic9/commons-test.git
 
 ### Build it and run tests
 
-	cd commons-test
-	./gradlew check jacocoTestReport
+    cd commons-test
+    ./gradlew check jacocoTestReport
 
 ### Release it
 

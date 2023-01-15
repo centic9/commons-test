@@ -1,10 +1,12 @@
 package org.dstadler.commons.testing;
 
 import com.sun.management.HotSpotDiagnosticMXBean;
+import org.dstadler.commons.util.SuppressForbidden;
 
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
 
+@SuppressForbidden(reason = "This class can only work when using internal hotspot functionality")
 public class HeapDump {
     // This is the name of the HotSpot Diagnostic MBean
     private static final String HOTSPOT_BEAN_NAME =

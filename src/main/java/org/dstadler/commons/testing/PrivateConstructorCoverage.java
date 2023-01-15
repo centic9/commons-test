@@ -1,5 +1,7 @@
 package org.dstadler.commons.testing;
 
+import org.dstadler.commons.util.SuppressForbidden;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Modifier;
 
@@ -37,6 +39,7 @@ public class PrivateConstructorCoverage {
 	 *
 	 * @throws Exception If invoking the default constructor fails for any reason.
 	 */
+	@SuppressForbidden(reason = "Reflection is used only for testing here")
 	public static <T> T executePrivateConstructor(final Class<T> targetClass) throws Exception {
         if(Modifier.isAbstract(targetClass.getModifiers())) {
         	throw new IllegalArgumentException("Cannot run the private constructor for abstract classes.");

@@ -10,6 +10,7 @@ import org.dstadler.commons.http.NanoHTTPD;
 import org.junit.Test;
 
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
 
 @SuppressWarnings("Convert2Lambda")        // should still compile/run with Java 7
@@ -26,6 +27,26 @@ public class TestHelpersTest {
         TestHelpers.CompareToTest(new MyString("str"), new MyString("str"), new MyString("str2"), false);
         TestHelpers.CompareToTest(new MyString("str3"), new MyString("str3"), new MyString("str2"), true);
         TestHelpers.CompareToTest(new MyString("str3"), new MyString("str3"), new MyString("str4"), false);
+	}
+
+	@Test
+	public void testCompareToTestFailures() {
+		assertThrows("obj and equ not equal", AssertionError.class,
+				() -> TestHelpers.CompareToTest(null, new MyString("str2"), new MyString("str4"), false));
+		assertThrows("obj and equ not equal", AssertionError.class,
+				() -> TestHelpers.CompareToTest(new MyString("str3"), null, new MyString("str4"), false));
+		assertThrows("obj and equ not equal", AssertionError.class,
+				() -> TestHelpers.CompareToTest(new MyString("str3"), new MyString("str3"), null, false));
+		assertThrows("obj and equ not equal", AssertionError.class,
+				() -> TestHelpers.CompareToTest(new MyString("str3"), new MyString("str2"), new MyString("str4"), false));
+		assertThrows("obj and notEqu are equal", AssertionError.class,
+				() -> TestHelpers.CompareToTest(new MyString("str3"), new MyString("str3"), new MyString("str3"), false));
+		assertThrows("notEqu is not less", AssertionError.class,
+				() -> TestHelpers.CompareToTest(new MyString("str3"), new MyString("str3"), new MyString("str4"), true));
+		assertThrows("obj and equ are the same object", AssertionError.class,
+				() -> TestHelpers.CompareToTest("str3", "str3", "str4", false));
+		assertThrows("obj and equ are the same object", AssertionError.class,
+				() -> TestHelpers.CompareToTest("str3", "str2", "str3", false));
     }
 
     @Test

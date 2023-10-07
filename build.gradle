@@ -3,7 +3,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'de.thetaphi:forbiddenapis:3.5.1'
+        classpath 'de.thetaphi:forbiddenapis:3.6'
     }
 }
 
@@ -46,8 +46,8 @@ configurations {
 
 dependencies {
     implementation 'org.apache.commons:commons-lang3:3.13.0'
-    implementation 'commons-io:commons-io:2.13.0'
-    implementation 'org.dstadler:commons-dost:1.2.0.2'
+    implementation 'commons-io:commons-io:2.14.0'
+    implementation 'org.dstadler:commons-dost:1.2.0.3'
 
     // dumbster is somewhat broken, but we use it in SafeCloseSmtpServer...
     // dumbster includes javax.mail-api 1.3.2, but this has no jar?!

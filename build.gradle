@@ -45,7 +45,7 @@ configurations {
 }
 
 dependencies {
-    implementation 'org.apache.commons:commons-lang3:3.13.0'
+    implementation 'org.apache.commons:commons-lang3:3.14.0'
     implementation 'commons-io:commons-io:2.15.0'
     implementation 'org.dstadler:commons-dost:1.2.0.3'
 

@@ -46,7 +46,7 @@ configurations {
 
 dependencies {
     implementation 'org.apache.commons:commons-lang3:3.14.0'
-    implementation 'commons-io:commons-io:2.15.0'
+    implementation 'commons-io:commons-io:2.15.1'
     implementation 'org.dstadler:commons-dost:1.2.0.3'
 
     // dumbster is somewhat broken, but we use it in SafeCloseSmtpServer...
@@ -64,7 +64,7 @@ dependencies {
 }
 
 wrapper {
-    gradleVersion = '7.6.1'
+    gradleVersion = '8.5'
 }
 
 test {
@@ -83,17 +83,17 @@ jacoco {
 
 jacocoTestReport {
     reports {
-        xml.enabled true
+        xml.required = true
     }
 }
 
 task sourcesJar(type: Jar) {
-    classifier = 'sources'
+    archiveClassifier = 'sources'
     from sourceSets.main.allJava
 }
 
 task javadocJar(type: Jar) {
-    classifier = 'javadoc'
+    archiveClassifier = 'javadoc'
     from javadoc
 }
 

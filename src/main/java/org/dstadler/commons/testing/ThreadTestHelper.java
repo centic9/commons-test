@@ -4,7 +4,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CyclicBarrier;
@@ -76,7 +75,7 @@ public class ThreadTestHelper {
 	public void executeTest(TestRunnable run) throws Throwable {
 		log.info("Starting thread test");
 
-		List<Thread> threads = new LinkedList<>();
+		List<Thread> threads = new ArrayList<>();
 
 		// start all threads
 		for (int i = 0; i < threadCount; i++) {

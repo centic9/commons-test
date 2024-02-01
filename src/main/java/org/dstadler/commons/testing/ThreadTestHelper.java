@@ -72,6 +72,13 @@ public class ThreadTestHelper {
 		executions = new int[threadCount];
 	}
 
+	/**
+	 * This method executes the passed {@link TestRunnable} in multiple
+	 * threads.
+	 *
+	 * @param run {@link TestRunnable} to execute
+	 * @throws Throwable if an exception happened during the execution of the {@link TestRunnable}
+	 */
 	public void executeTest(TestRunnable run) throws Throwable {
 		log.info("Starting thread test");
 
@@ -103,13 +110,14 @@ public class ThreadTestHelper {
 	}
 
 	/**
-	 * This methods executes the passed {@link Callable}. The number of executions depends
-	 * on the given runs number.
+	 * This method executes the provided {@link Callable} in an {@link ExecutorService}.
+	 *
+	 * The number of executions is specified via the given number of runs.
 	 *
 	 * @param <T> The return-type for the {@link Callable} testable.
 	 * @param testable test {@link Callable} to execute
 	 * @param runs defines how many times the passed {@link Callable} is executed
-	 * @return the results of the the execution of the passed {@link Callable}
+	 * @return the results of the execution of the passed {@link Callable}
 	 * @throws Throwable if an exception happened during the execution of the {@link Callable}
 	 */
 	public static <T> List<T> executeTest(final Callable<T> testable, int runs) throws Throwable {
@@ -170,9 +178,9 @@ public class ThreadTestHelper {
 					executions[threadNum]++;
 				}
 
-				// do end-work here, we don't do this in a finally as we log
-				// Exception
-				// then anyway
+				// do end-work here, we don't do this in a finally-block to avoid follow-up
+				// exceptions to hide the root-cause if the doEnd() implementation is not
+				// done carefully
 				run.doEnd(threadNum);
 			} catch (Throwable e) {
 				// log.log(Level.SEVERE, "Caught unexpected Throwable", e);
@@ -211,6 +219,9 @@ public class ThreadTestHelper {
 		 *
 		 * This method should throw an Exception if any check fails at this
 		 * point.
+		 *
+		 * Note: This method is not invoked any more if run() throws an exception
+		 * to not "hide" the root-cause exception by follow-up exceptions here
 		 *
 		 * @param threadNum
 		 *        The number of the thread executing this doEnd()

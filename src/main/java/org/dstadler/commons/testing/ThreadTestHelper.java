@@ -1,7 +1,7 @@
 package org.dstadler.commons.testing;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -103,9 +103,8 @@ public class ThreadTestHelper {
 		// make sure the resulting number of executions is correct
 		for (int i = 0; i < threadCount; i++) {
 			// check if enough items were performed
-			assertEquals("Thread " + i
-					+ " did not execute all iterations", testsPerThread,
-					executions[i]);
+			assertEquals(testsPerThread, executions[i],
+					"Thread " + i + " did not execute all iterations");
 		}
 	}
 

@@ -1,6 +1,6 @@
 package org.dstadler.commons.testing;
 
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.io.IOException;
 import java.lang.ref.WeakReference;
@@ -30,7 +30,7 @@ import java.util.List;
  * garbage collector or if it lingers in memory for some reason.
  *
  * By default, a heap dump will be written to the file 'MemoryLeakVerifier.hprof' in the
- * current directory. This can be disable via setHeapDump(false)
+ * current directory. This can be disabled via setHeapDump(false)
  *
  * Idea taken from http://stackoverflow.com/a/7410460/411846
  */
@@ -109,9 +109,9 @@ public class MemoryLeakVerifier {
 			}
 		}
 
-	    assertNull("Object should not exist after " + MAX_GC_ITERATIONS +
+	    assertNull(ref.get(),
+				"Object should not exist after " + MAX_GC_ITERATIONS +
 						" collections" + (dumpHeap ?
-						", a heap-dump was written to " + HEAP_DUMP_FILE_NAME : ""),
-	    		ref.get());
+						", a heap-dump was written to " + HEAP_DUMP_FILE_NAME : ""));
 	}
 }

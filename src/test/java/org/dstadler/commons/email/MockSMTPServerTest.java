@@ -1,6 +1,10 @@
 package org.dstadler.commons.email;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Arrays;
 
@@ -10,13 +14,13 @@ import javax.mail.internet.InternetAddress;
 import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.HtmlEmail;
 import org.dstadler.commons.testing.MemoryLeakVerifier;
-import org.junit.After;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
 
 public class MockSMTPServerTest {
 	private static final MemoryLeakVerifier verifier = new MemoryLeakVerifier();
 
-	@After
+	@AfterEach
 	public void tearDown() {
 		verifier.assertGarbageCollected();
 	}

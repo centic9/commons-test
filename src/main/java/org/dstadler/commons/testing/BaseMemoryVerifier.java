@@ -1,6 +1,6 @@
 package org.dstadler.commons.testing;
 
-import org.junit.After;
+import org.junit.jupiter.api.AfterEach;
 
 /**
  * Base class for tests which want to check for memory leaks at the end of execution.
@@ -12,7 +12,7 @@ import org.junit.After;
 public abstract class BaseMemoryVerifier {
     protected static final MemoryLeakVerifier verifier = new MemoryLeakVerifier();
 
-    @After
+    @AfterEach
     public void tearDownBase() {
         verifier.assertGarbageCollected();
     }

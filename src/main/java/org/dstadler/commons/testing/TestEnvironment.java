@@ -1,5 +1,8 @@
 package org.dstadler.commons.testing;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.apache.commons.io.FileUtils;
 import org.dstadler.commons.logging.jdk.LoggerFactory;
 
@@ -10,9 +13,6 @@ import java.util.Objects;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
 /**
  * Test environment utilities, e.g. runtime data directory (also known as temporary directory).
@@ -29,7 +29,7 @@ public class TestEnvironment {
     /**
      * Directory for runtime data temporarily required by tests (aka temp directory).
      */
-    public static final String RUNTIME_DATA_PATH = "build/testdata/" + UUID.randomUUID().toString();
+    public static final String RUNTIME_DATA_PATH = "build/testdata/" + UUID.randomUUID();
     public static final String ABS_RUNTIME_DATA_PATH =
             new File(RUNTIME_DATA_PATH).getAbsolutePath();
 
@@ -69,10 +69,11 @@ public class TestEnvironment {
      */
     public static void clearRuntimeData() throws IOException {
         // Little sanity check:
-        assertTrue("Had: " + ABS_RUNTIME_DATA_PATH,
-        		ABS_RUNTIME_DATA_PATH.endsWith(RUNTIME_DATA_PATH.replace("/", File.separator).replace("\\", File.separator)));
-        assertTrue("Had: " + ABS_RUNTIME_DATA_PATH,
-        		ABS_RUNTIME_DATA_PATH.contains(File.separator + "build" + File.separator));
+        assertTrue(
+				ABS_RUNTIME_DATA_PATH.endsWith(RUNTIME_DATA_PATH.replace("/", File.separator).replace("\\", File.separator)),
+				"Had: " + ABS_RUNTIME_DATA_PATH);
+        assertTrue(ABS_RUNTIME_DATA_PATH.contains(File.separator + "build" + File.separator),
+				"Had: " + ABS_RUNTIME_DATA_PATH);
 
         File directory = new File(ABS_RUNTIME_DATA_PATH);
 		deleteDirectory(directory);

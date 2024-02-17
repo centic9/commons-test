@@ -1,11 +1,12 @@
 package org.dstadler.commons.testing;
 
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
-
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 public class MemoryLeakVerifierTest {
 	@Test
@@ -26,12 +27,10 @@ public class MemoryLeakVerifierTest {
 
 		verifier.addObject(obj);
 
-		try {
-			verifier.assertGarbageCollected(3);
-			fail("Should report a memory leak here");
-		} catch (AssertionError e) {
-			TestHelpers.assertContains(e, "Object should not exist");
-		}
+		TestHelpers.assertContains(
+				assertThrows(AssertionError.class,
+						() -> verifier.assertGarbageCollected(3)),
+				"Object should not exist");
 	}
 
 	@Test
@@ -61,8 +60,9 @@ public class MemoryLeakVerifierTest {
 		} catch (AssertionError e) {
 			TestHelpers.assertContains(e, "Object should not exist");
 
-			assertTrue("HeapDumpFile was not found at " + heapDumpFile.getAbsolutePath(), heapDumpFile.exists());
-			assertTrue("HeapDumpFile at " + heapDumpFile.getAbsolutePath() + " could not be deleted", heapDumpFile.delete());
+			assertTrue(heapDumpFile.exists(), "HeapDumpFile was not found at " + heapDumpFile.getAbsolutePath());
+			assertTrue(heapDumpFile.delete(),
+					"HeapDumpFile at " + heapDumpFile.getAbsolutePath() + " could not be deleted");
 		}
 	}
 

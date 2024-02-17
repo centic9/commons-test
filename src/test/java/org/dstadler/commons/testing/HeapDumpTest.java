@@ -1,11 +1,13 @@
 package org.dstadler.commons.testing;
 
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
 
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.Test;
 
 public class HeapDumpTest {
     @Test
@@ -38,13 +40,12 @@ public class HeapDumpTest {
         assertTrue(file.mkdirs());
 
         try {
-            HeapDump.dumpHeap(file.getAbsolutePath(), true);
-            fail("Should fail to write the dump in this case, tried for " + file.getAbsolutePath());
-        } catch (IOException e) {
-            // expected in this case
+            assertThrows(IOException.class,
+					() -> HeapDump.dumpHeap(file.getAbsolutePath(), true),
+					"Should fail to write the dump in this case, tried for " + file.getAbsolutePath());
         } finally {
-            assertTrue(file.exists());
-            assertTrue(file.delete());
+            assertTrue(file.exists(), "Failed for " + file.getAbsolutePath());
+            assertTrue(file.delete(), "Failed for " + file.getAbsolutePath());
         }
     }
 }

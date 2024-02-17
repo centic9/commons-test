@@ -1,36 +1,36 @@
 package org.dstadler.commons.testing;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+
 import org.dstadler.commons.http.NanoHTTPD;
 import org.dstadler.commons.logging.jdk.LoggerFactory;
 import org.dstadler.commons.net.UrlUtils;
-import org.junit.After;
-import org.junit.Assume;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assumptions;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.net.Inet6Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.util.Enumeration;
-import java.util.concurrent.Callable;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Logger;
-
-import static org.junit.Assert.*;
-
 
 /**
  * Just verify that the host where the tests are run does what we
  * expect it to in respect to hostname resolution/DNS/...
- *
- * @author cwat-dstadler
  */
-@SuppressWarnings("Convert2Lambda")     // should still compile with Java 7
 public class MockRESTServerTest {
     private static final Logger log = LoggerFactory.make();
 
-    @After
+    @AfterEach
     public void tearDown() throws InterruptedException {
         ThreadTestHelper.waitForThreadToFinishSubstring("NanoHTTP");
     }
@@ -48,58 +48,55 @@ public class MockRESTServerTest {
     @Test
     public void testIP() throws Exception {
         InetAddress localHost = java.net.InetAddress.getLocalHost();
-        assertNotNull("Should get a local address", localHost);
+        assertNotNull(localHost, "Should get a local address");
         String ipAddress = localHost.getHostAddress();
 
         log.info("Had hostname: " + ipAddress + ", address-info: " + localHost);
 
-        assertNotNull("Should get a local ip-address", ipAddress);
-        assertNotEquals("Local ip-address should not equal localhost", "localhost", ipAddress);
+        assertNotNull(ipAddress, "Should get a local ip-address");
+        assertNotEquals("localhost", ipAddress, "Local ip-address should not equal localhost");
 
         // Travis-CI reports 127.0.0.1 for some reason
-        Assume.assumeFalse("Travis-CI reports an unexpected ipAddress",
-                "true".equals(System.getenv("TRAVIS")) && "127.0.0.1".equals(ipAddress));
+        Assumptions.assumeFalse("true".equals(System.getenv("TRAVIS")) && "127.0.0.1".equals(ipAddress),
+				"Travis-CI reports an unexpected ipAddress");
         // Github Actions reports an inaccessible hostname
-        Assume.assumeFalse("Github Actions report an unexpected ipAddress",
-                "true".equals(System.getenv("GITHUB_ACTIONS")));
+        Assumptions.assumeFalse("true".equals(System.getenv("GITHUB_ACTIONS")), "Github Actions report an unexpected ipAddress");
 
         // cannot assert on startsWith("127.0.0") as e.g. lab13 reports an ip-address of 127.0.0.2
-        assertNotEquals("Local ip-address should not equal 127.0.0.1", "127.0.0.1", ipAddress);
+        assertNotEquals("127.0.0.1", ipAddress, "Local ip-address should not equal 127.0.0.1");
 
         runWithHostname(ipAddress);
     }
 
     @Test
     public void testHostname() throws Exception {
-        assertNotNull(java.net.InetAddress.getLocalHost());
+        assertNotNull(InetAddress.getLocalHost());
         String hostname = java.net.InetAddress.getLocalHost().getHostName();
         assertNotNull(hostname);
 
         // Travis-CI reports 127.0.0.1 for some reason
-        Assume.assumeFalse("Travis-CI reports an unexpected hostname",
-                "true".equals(System.getenv("TRAVIS")) && "localhost".equals(hostname));
+        Assumptions.assumeFalse("true".equals(System.getenv("TRAVIS")) && "localhost".equals(hostname),
+				"Travis-CI reports an unexpected hostname");
 		// Github Actions reports an inaccessible hostname
-		Assume.assumeFalse("Github Actions report an unexpected ipAddress",
-				"true".equals(System.getenv("GITHUB_ACTIONS")));
+		Assumptions.assumeFalse("true".equals(System.getenv("GITHUB_ACTIONS")), "Github Actions report an unexpected ipAddress");
 
-        assertNotEquals("Local hostname should not equal localhost", "localhost", hostname);
-        assertFalse("Local hostname should not start with 127.0.0", hostname.startsWith("127.0.0"));
+        assertNotEquals("localhost", hostname, "Local hostname should not equal localhost");
+        assertFalse(hostname.startsWith("127.0.0"), "Local hostname should not start with 127.0.0");
 
         runWithHostname(hostname);
     }
 
     @Test
     public void testCanonicalHostname() throws Exception {
-        assertNotNull(java.net.InetAddress.getLocalHost());
+        assertNotNull(InetAddress.getLocalHost());
         String hostname = java.net.InetAddress.getLocalHost().getCanonicalHostName();
         assertNotNull(hostname);
 
         // Travis-CI reports 127.0.0.1 for some reason
-        Assume.assumeFalse("Travis-CI reports an unexpected hostname",
-                "true".equals(System.getenv("TRAVIS")) && "localhost".equals(hostname));
+        Assumptions.assumeFalse("true".equals(System.getenv("TRAVIS")) && "localhost".equals(hostname),
+				"Travis-CI reports an unexpected hostname");
 		// Github Actions reports an inaccessible hostname
-		Assume.assumeFalse("Github Actions report an unexpected ipAddress",
-				"true".equals(System.getenv("GITHUB_ACTIONS")));
+		Assumptions.assumeFalse("true".equals(System.getenv("GITHUB_ACTIONS")), "Github Actions report an unexpected ipAddress");
 
         assertNotEquals("localhost", hostname);
         assertFalse(hostname.startsWith("127.0.0"));
@@ -107,7 +104,7 @@ public class MockRESTServerTest {
         runWithHostname(hostname);
     }
 
-    @Ignore("Fails in some environments")
+    @Disabled("Fails in some environments")
     @Test
     public void testAllNetworkInterfaces() throws Exception {
         final Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
@@ -119,8 +116,8 @@ public class MockRESTServerTest {
                 assertNotNull(inetAddress);
                 String hostname = inetAddress.getCanonicalHostName();
                 assertNotNull(hostname);
-                assertNotEquals("Had: " + hostname, "localhost", hostname);
-                assertFalse("Had: " + hostname, hostname.startsWith("127.0.0"));
+                assertNotEquals("localhost", hostname, "Had: " + hostname);
+                assertFalse(hostname.startsWith("127.0.0"), "Had: " + hostname);
 
                 // UrlUtils does not support IPv6 yet
                 if(inetAddress instanceof Inet6Address) {
@@ -141,17 +138,17 @@ public class MockRESTServerTest {
         try (MockRESTServer server = new MockRESTServer(NanoHTTPD.HTTP_OK,  NanoHTTPD.MIME_PLAINTEXT, "OK")) {
             final String url = "http://" + hostname + ":" + server.getPort();
             boolean check = UrlUtils.isAvailable(url, false, 500);
-            assertTrue("Expect URL to be available. " + url + ": Had: " + check + ", on Windows this might indicate that a VirtualBox related network interface is enabled",
-                    check);
+            assertTrue(check,
+					"Expect URL to be available. " + url + ": Had: " + check + ", on Windows this might indicate that a VirtualBox related network interface is enabled");
 
             check = UrlUtils.isAvailable(url, true, 500);
-            assertTrue("Expect URL to be available. " + url + ": Had: " + check, check);
+            assertTrue(check, "Expect URL to be available. " + url + ": Had: " + check);
 
             String checkStr = UrlUtils.retrieveData(url, 500);
-            assertTrue("Expect URL to be available. " + url + ": Had: " + checkStr, checkStr.length() > 0);
+			assertFalse(checkStr.isEmpty(), "Expect URL to be available. " + url + ": Had: " + checkStr);
 
             String data = UrlUtils.retrieveData(url, 500);
-            assertEquals("Expect URL to return 'OK'. " + url + ": Had: " + data, "OK", data);
+            assertEquals("OK", data, "Expect URL to return 'OK'. " + url + ": Had: " + data);
         }
     }
 
@@ -175,7 +172,8 @@ public class MockRESTServerTest {
         MockRESTServer[] servers = new MockRESTServer[100];
         try {
             for (int i = 0; i < 100; i++) {
-                servers[i] = new MockRESTServer(NanoHTTPD.HTTP_OK, NanoHTTPD.MIME_HTML, "<html>" + i + "</html>");
+				//noinspection resource
+				servers[i] = new MockRESTServer(NanoHTTPD.HTTP_OK, NanoHTTPD.MIME_HTML, "<html>" + i + "</html>");
             }
         } catch (IOException e) {
             TestHelpers.assertContains(e, "No free port found");
@@ -191,49 +189,40 @@ public class MockRESTServerTest {
     @Test
     public void testWithRunnable() throws IOException {
         final AtomicBoolean called = new AtomicBoolean();
-        try (MockRESTServer server = new MockRESTServer(new Runnable() {
-            @Override
-            public void run() {
-                assertFalse("Should be called exactly once, but was already called before", called.get());
-                called.set(true);
-            }
-        }, NanoHTTPD.HTTP_OK, NanoHTTPD.MIME_HTML, "<html>1</html>")) {
+        try (MockRESTServer server = new MockRESTServer(() -> {
+			assertFalse(called.get(), "Should be called exactly once, but was already called before");
+			called.set(true);
+		}, NanoHTTPD.HTTP_OK, NanoHTTPD.MIME_HTML, "<html>1</html>")) {
             String data = UrlUtils.retrieveData("http://localhost:" + server.getPort(), 10_000);
             assertEquals("<html>1</html>", data);
         }
 
-        assertTrue("Should be called now", called.get());
+        assertTrue(called.get(), "Should be called now");
     }
 
     @Test
     public void testWithCallable() throws IOException {
         final AtomicBoolean called = new AtomicBoolean();
-        try (MockRESTServer server = new MockRESTServer(new Callable<NanoHTTPD.Response>() {
-            @Override
-            public NanoHTTPD.Response call() {
-                assertFalse("Should be called exactly once, but was already called before", called.get());
-                called.set(true);
-                return new NanoHTTPD.Response(NanoHTTPD.HTTP_OK, NanoHTTPD.MIME_HTML, "<html>1</html>");
-            }
-        })) {
+        try (MockRESTServer server = new MockRESTServer(() -> {
+			assertFalse(called.get(), "Should be called exactly once, but was already called before");
+			called.set(true);
+			return new NanoHTTPD.Response(NanoHTTPD.HTTP_OK, NanoHTTPD.MIME_HTML, "<html>1</html>");
+		})) {
             String data = UrlUtils.retrieveData("http://localhost:" + server.getPort(), 10_000);
             assertEquals("<html>1</html>", data);
         }
 
-        assertTrue("Should be called now", called.get());
+        assertTrue(called.get(), "Should be called now");
     }
 
     @Test
     public void testWithCallableException() throws IOException {
         final AtomicBoolean called = new AtomicBoolean();
-        try (MockRESTServer server = new MockRESTServer(new Callable<NanoHTTPD.Response>() {
-            @Override
-            public NanoHTTPD.Response call() {
-                assertFalse("Should be called exactly once, but was already called before", called.get());
-                called.set(true);
-                throw new RuntimeException("TestException");
-            }
-        })) {
+        try (MockRESTServer server = new MockRESTServer(() -> {
+			assertFalse(called.get(), "Should be called exactly once, but was already called before");
+			called.set(true);
+			throw new RuntimeException("TestException");
+		})) {
             try {
                 UrlUtils.retrieveData("http://localhost:" + server.getPort(), 10_000);
                 fail("Should catch HTTP 500 here because of the exception");
@@ -242,6 +231,6 @@ public class MockRESTServerTest {
             }
         }
 
-        assertTrue("Should be called now", called.get());
+        assertTrue(called.get(), "Should be called now");
     }
 }

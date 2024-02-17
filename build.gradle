@@ -58,6 +58,7 @@ dependencies {
 
     // for TestHelpers we need junit during normal compile...
     implementation 'org.junit.vintage:junit-vintage-engine:5.10.2'
+    implementation 'org.junit.jupiter:junit-jupiter-engine:5.10.2'
 
     testImplementation 'org.apache.commons:commons-email:1.5'
     testImplementation 'com.sun.activation:javax.activation:1.2.0'     // needed for JDK 11

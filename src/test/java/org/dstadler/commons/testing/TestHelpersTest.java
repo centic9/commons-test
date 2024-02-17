@@ -1,19 +1,16 @@
 package org.dstadler.commons.testing;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.Proxy.Type;
-import java.util.Comparator;
 import java.util.logging.Level;
 
 import org.dstadler.commons.http.NanoHTTPD;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThrows;
-import static org.junit.Assert.assertTrue;
-
-@SuppressWarnings("Convert2Lambda")        // should still compile/run with Java 7
 public class TestHelpersTest {
 
     @Test
@@ -31,65 +28,63 @@ public class TestHelpersTest {
 
 	@Test
 	public void testCompareToTestFailures() {
-		assertThrows("obj and equ not equal", AssertionError.class,
-				() -> TestHelpers.CompareToTest(null, new MyString("str2"), new MyString("str4"), false));
-		assertThrows("obj and equ not equal", AssertionError.class,
-				() -> TestHelpers.CompareToTest(new MyString("str3"), null, new MyString("str4"), false));
-		assertThrows("obj and equ not equal", AssertionError.class,
-				() -> TestHelpers.CompareToTest(new MyString("str3"), new MyString("str3"), null, false));
-		assertThrows("obj and equ not equal", AssertionError.class,
-				() -> TestHelpers.CompareToTest(new MyString("str3"), new MyString("str2"), new MyString("str4"), false));
-		assertThrows("obj and notEqu are equal", AssertionError.class,
-				() -> TestHelpers.CompareToTest(new MyString("str3"), new MyString("str3"), new MyString("str3"), false));
-		assertThrows("notEqu is not less", AssertionError.class,
-				() -> TestHelpers.CompareToTest(new MyString("str3"), new MyString("str3"), new MyString("str4"), true));
-		assertThrows("obj and equ are the same object", AssertionError.class,
-				() -> TestHelpers.CompareToTest("str3", "str3", "str4", false));
-		assertThrows("obj and equ are the same object", AssertionError.class,
-				() -> TestHelpers.CompareToTest("str3", "str2", "str3", false));
+		assertThrows(AssertionError.class,
+				() -> TestHelpers.CompareToTest(null, new MyString("str2"), new MyString("str4"), false),
+				"obj and equ not equal");
+		assertThrows(AssertionError.class,
+				() -> TestHelpers.CompareToTest(new MyString("str3"), null, new MyString("str4"), false),
+				"obj and equ not equal");
+		assertThrows(AssertionError.class,
+				() -> TestHelpers.CompareToTest(new MyString("str3"), new MyString("str3"), null, false),
+				"obj and equ not equal");
+		assertThrows(AssertionError.class,
+				() -> TestHelpers.CompareToTest(new MyString("str3"), new MyString("str2"), new MyString("str4"), false),
+				"obj and equ not equal");
+		assertThrows(AssertionError.class,
+				() -> TestHelpers.CompareToTest(new MyString("str3"), new MyString("str3"), new MyString("str3"), false),
+				"obj and notEqu are equal");
+		assertThrows(AssertionError.class,
+				() -> TestHelpers.CompareToTest(new MyString("str3"), new MyString("str3"), new MyString("str4"), true),
+				"notEqu is not less");
+		assertThrows(AssertionError.class,
+				() -> TestHelpers.CompareToTest("str3", "str3", "str4", false),
+				"obj and equ are the same object");
+		assertThrows(AssertionError.class,
+				() -> TestHelpers.CompareToTest("str3", "str2", "str3", false),
+				"obj and equ are the same object");
     }
 
     @Test
     public void testComparatorTest() {
         //noinspection StringOperationCanBeSimplified
-        TestHelpers.ComparatorTest(new Comparator<String>() {
+        TestHelpers.ComparatorTest((o1, o2) -> {
+			if(o1 == null && o2 == null) {
+				return 0;
+			}
+			if(o1 == null) {
+				return -1;
+			}
+			if(o2 == null) {
+				return 1;
+			}
 
-            @Override
-            public int compare(String o1, String o2) {
-                if(o1 == null && o2 == null) {
-                    return 0;
-                }
-                if(o1 == null) {
-                    return -1;
-                }
-                if(o2 == null) {
-                    return 1;
-                }
-
-                return o1.compareTo(o2);
-            }
-
-        }, new String("str"), "str", "str2", false);
+			return o1.compareTo(o2);
+		}, new String("str"), "str", "str2", false);
 
         //noinspection StringOperationCanBeSimplified
-        TestHelpers.ComparatorTest(new Comparator<String>() {
+        TestHelpers.ComparatorTest((o1, o2) -> {
+			if(o1 == null && o2 == null) {
+				return 0;
+			}
+			if(o1 == null) {
+				return -1;
+			}
+			if(o2 == null) {
+				return 1;
+			}
 
-            @Override
-            public int compare(String o1, String o2) {
-                if(o1 == null && o2 == null) {
-                    return 0;
-                }
-                if(o1 == null) {
-                    return -1;
-                }
-                if(o2 == null) {
-                    return 1;
-                }
-
-                return o1.compareTo(o2);
-            }
-
-        }, new String("str3"), "str3", "str2", true);
+			return o1.compareTo(o2);
+		}, new String("str3"), "str3", "str2", true);
     }
 
     @Test
@@ -250,35 +245,35 @@ public class TestHelpersTest {
     @Test
     public void testCreateTempDirectoryWithSuffix() throws IOException {
         File dir = TestHelpers.createTempDirectory("abc", ".test");
-        assertNotNull(dir);
-        assertTrue(dir.exists());
-        assertTrue(dir.isDirectory());
+        Assertions.assertNotNull(dir);
+        Assertions.assertTrue(dir.exists());
+        Assertions.assertTrue(dir.isDirectory());
 
-        assertTrue(dir.delete());
-        assertTrue(dir.getName().endsWith(".test"));
-        assertTrue(dir.getName().startsWith("abc"));
+        Assertions.assertTrue(dir.delete());
+        Assertions.assertTrue(dir.getName().endsWith(".test"));
+        Assertions.assertTrue(dir.getName().startsWith("abc"));
     }
 
     @Test
     public void testCreateTempDirectoryNoSuffix() throws IOException {
         File dir = TestHelpers.createTempDirectory("abc", "");
-        assertNotNull(dir);
-        assertTrue(dir.exists());
-        assertTrue(dir.isDirectory());
+        Assertions.assertNotNull(dir);
+        Assertions.assertTrue(dir.exists());
+        Assertions.assertTrue(dir.isDirectory());
 
-        assertTrue(dir.delete());
-        assertTrue(dir.getName().startsWith("abc"));
+        Assertions.assertTrue(dir.delete());
+        Assertions.assertTrue(dir.getName().startsWith("abc"));
     }
 
     @Test
     public void testCreateTempDirectoryNullSuffix() throws IOException {
         File dir = TestHelpers.createTempDirectory("def", null);
-        assertNotNull(dir);
-        assertTrue(dir.exists());
-        assertTrue(dir.isDirectory());
+        Assertions.assertNotNull(dir);
+        Assertions.assertTrue(dir.exists());
+        Assertions.assertTrue(dir.isDirectory());
 
-        assertTrue(dir.delete());
-        assertTrue(dir.getName().endsWith(".tmp"));
-        assertTrue(dir.getName().startsWith("def"));
+        Assertions.assertTrue(dir.delete());
+        Assertions.assertTrue(dir.getName().endsWith(".tmp"));
+        Assertions.assertTrue(dir.getName().startsWith("def"));
     }
 }

@@ -1,10 +1,10 @@
 package org.dstadler.commons.testing;
 
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.ArrayList;
 
-import static org.junit.Assert.fail;
+import org.junit.jupiter.api.Test;
 
 public class BaseMemoryVerifierTest {
     @Test
@@ -25,12 +25,8 @@ public class BaseMemoryVerifierTest {
         verifier.register(obj);
 
         // should not cause an error if no allocation was registered
-        try {
-            verifier.tearDownBase();
-            fail("Expecting to fail here");
-        } catch (AssertionError e) {
-            // expected here
-        }
+		assertThrows(AssertionError.class,
+				verifier::tearDownBase);
     }
 
     private static class FailingBaseMemoryVerifier extends BaseMemoryVerifier {

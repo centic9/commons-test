@@ -1,16 +1,19 @@
 package org.dstadler.commons.testing;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+
 import org.apache.commons.io.FileUtils;
-import org.junit.After;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.IOException;
 
-import static org.junit.Assert.*;
-
 public class TestEnvironmentTest {
-    @After
+    @AfterEach
     public void tearDown() throws IOException {
         TestEnvironment.clearRuntimeData();
     }

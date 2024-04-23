@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -19,7 +20,9 @@ import java.io.IOException;
 import java.net.Inet6Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
+import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Logger;
 
@@ -31,22 +34,22 @@ public class MockRESTServerTest {
     private static final Logger log = LoggerFactory.make();
 
     @AfterEach
-    public void tearDown() throws InterruptedException {
+    void tearDown() throws InterruptedException {
         ThreadTestHelper.waitForThreadToFinishSubstring("NanoHTTP");
     }
 
     @Test
-    public void testLocalhost() throws Exception {
+    void testLocalhost() throws Exception {
         runWithHostname("localhost");
     }
 
     @Test
-    public void testLocalhostIP() throws Exception {
+    void testLocalhostIP() throws Exception {
         runWithHostname("127.0.0.1");
     }
 
     @Test
-    public void testIP() throws Exception {
+    void testIP() throws Exception {
         InetAddress localHost = java.net.InetAddress.getLocalHost();
         assertNotNull(localHost, "Should get a local address");
         String ipAddress = localHost.getHostAddress();
@@ -69,7 +72,7 @@ public class MockRESTServerTest {
     }
 
     @Test
-    public void testHostname() throws Exception {
+    void testHostname() throws Exception {
         assertNotNull(InetAddress.getLocalHost());
         String hostname = java.net.InetAddress.getLocalHost().getHostName();
         assertNotNull(hostname);
@@ -87,7 +90,7 @@ public class MockRESTServerTest {
     }
 
     @Test
-    public void testCanonicalHostname() throws Exception {
+    void testCanonicalHostname() throws Exception {
         assertNotNull(InetAddress.getLocalHost());
         String hostname = java.net.InetAddress.getLocalHost().getCanonicalHostName();
         assertNotNull(hostname);
@@ -106,7 +109,7 @@ public class MockRESTServerTest {
 
     @Disabled("Fails in some environments")
     @Test
-    public void testAllNetworkInterfaces() throws Exception {
+    void testAllNetworkInterfaces() throws Exception {
         final Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
         while(interfaces.hasMoreElements()) {
             final NetworkInterface networkInterface = interfaces.nextElement();
@@ -153,7 +156,7 @@ public class MockRESTServerTest {
     }
 
     @Test
-    public void testStartupTwice() throws IOException {
+    void testStartupTwice() throws IOException {
         try (MockRESTServer server = new MockRESTServer(NanoHTTPD.HTTP_OK, NanoHTTPD.MIME_HTML, "<html>1</html>")) {
             try (MockRESTServer server2 = new MockRESTServer(NanoHTTPD.HTTP_OK, NanoHTTPD.MIME_HTML, "<html>2</html>")) {
                 assertTrue(server.getPort() != server2.getPort());
@@ -168,7 +171,7 @@ public class MockRESTServerTest {
     }
 
     @Test
-    public void testExhaustPorts() {
+    void testExhaustPorts() {
         MockRESTServer[] servers = new MockRESTServer[100];
         try {
             for (int i = 0; i < 100; i++) {
@@ -187,7 +190,7 @@ public class MockRESTServerTest {
     }
 
     @Test
-    public void testWithRunnable() throws IOException {
+    void testWithRunnable() throws IOException {
         final AtomicBoolean called = new AtomicBoolean();
         try (MockRESTServer server = new MockRESTServer(() -> {
 			assertFalse(called.get(), "Should be called exactly once, but was already called before");
@@ -201,7 +204,7 @@ public class MockRESTServerTest {
     }
 
     @Test
-    public void testWithCallable() throws IOException {
+    void testWithCallable() throws IOException {
         final AtomicBoolean called = new AtomicBoolean();
         try (MockRESTServer server = new MockRESTServer(() -> {
 			assertFalse(called.get(), "Should be called exactly once, but was already called before");
@@ -216,7 +219,7 @@ public class MockRESTServerTest {
     }
 
     @Test
-    public void testWithCallableException() throws IOException {
+    void testWithCallableException() throws IOException {
         final AtomicBoolean called = new AtomicBoolean();
         try (MockRESTServer server = new MockRESTServer(() -> {
 			assertFalse(called.get(), "Should be called exactly once, but was already called before");
@@ -233,4 +236,22 @@ public class MockRESTServerTest {
 
         assertTrue(called.get(), "Should be called now");
     }
+
+	@Test
+	void exceptionWhenPortsAreExhausted() throws IOException {
+		List<MockRESTServer> servers = new ArrayList<>();
+		// default range is for 10 ports
+		for (int i = 0; i < 10; i++) {
+			servers.add(new MockRESTServer(NanoHTTPD.HTTP_OK,  NanoHTTPD.MIME_PLAINTEXT, "OK"));
+		}
+
+		//noinspection resource
+		final String msg = assertThrows(IOException.class,
+				() -> new MockRESTServer(NanoHTTPD.HTTP_OK, NanoHTTPD.MIME_PLAINTEXT, "OK")).getMessage();
+		TestHelpers.assertContains(msg, "No free port found", "15100", "15110");
+
+		for (int i = 0; i < 10; i++) {
+			servers.get(i).close();
+		}
+	}
 }

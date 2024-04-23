@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.util.Properties;
 import java.util.concurrent.Callable;
+import java.util.function.Supplier;
 import java.util.logging.Logger;
 
 import org.dstadler.commons.http.NanoHTTPD;
@@ -54,15 +55,7 @@ public class MockRESTServer implements Closeable {
         // first try to get the next free port
         port = getNextFreePort();
 
-        httpd = new NanoHTTPD(port) {
-            /**
-             * Internal method to provide the response that is set.
-             */
-            @Override
-            public Response serve(String uri, String method, Properties header, Properties params) {
-                return new NanoHTTPD.Response(status, mime, msg);
-            }
-        };
+        httpd = startServer(() -> new NanoHTTPD.Response(status, mime, msg), port);
     }
 
     /**
@@ -81,16 +74,10 @@ public class MockRESTServer implements Closeable {
         // first try to get the next free port
         port = getNextFreePort();
 
-        httpd = new NanoHTTPD(port) {
-            /**
-             * Internal method to run the provided Runnable
-             */
-            @Override
-            public Response serve(String uri, String method, Properties header, Properties params) {
-                response.run();
-                return new NanoHTTPD.Response(status, mime, msg);
-            }
-        };
+		httpd = startServer(() -> {
+				response.run();
+				return new NanoHTTPD.Response(status, mime, msg);
+			}, port);
     }
 
     /**
@@ -108,20 +95,31 @@ public class MockRESTServer implements Closeable {
         // first try to get the next free port
         port = getNextFreePort();
 
-        httpd = new NanoHTTPD(port) {
-            /**
-             * Internal method to run the provided Runnable
-             */
-            @Override
-            public Response serve(String uri, String method, Properties header, Properties params) {
-                try {
-                    return response.call();
-                } catch (Exception e) {
-                    throw new IllegalStateException(e);
-                }
-            }
-        };
+		httpd = startServer(() -> {
+				try {
+					return response.call();
+				} catch (Exception e) {
+					throw new IllegalStateException(e);
+				}
+			}, port);
     }
+
+	private static NanoHTTPD startServer(Supplier<NanoHTTPD.Response> response, final int port) throws IOException {
+		try {
+			return new NanoHTTPD(port) {
+
+				/**
+				 * Internal method to provide the response that is set.
+				 */
+				@Override
+				public Response serve(String uri, String method, Properties header, Properties params) {
+					return response.get();
+				}
+			};
+		} catch (IOException e) {
+			throw new IOException("Failed to start up NanoHTTPD with port " + port, e);
+		}
+	}
 
     /**
      * Method that is used to find the next available port. It uses the two constants PORT_RANGE_START and

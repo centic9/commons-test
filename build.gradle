@@ -3,7 +3,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'de.thetaphi:forbiddenapis:3.7'
+        classpath 'de.thetaphi:forbiddenapis:3.8'
     }
 }
 
@@ -22,7 +22,7 @@ apply plugin: 'de.thetaphi.forbiddenapis'
 apply plugin: 'jacoco'
 apply plugin: 'signing'
 
-sourceCompatibility = JavaVersion.VERSION_11
+sourceCompatibility = JavaVersion.VERSION_17
 group = 'org.dstadler'
 archivesBaseName = 'commons-test'
 
@@ -57,7 +57,7 @@ dependencies {
     api 'dumbster:dumbster:1.6'
 
     // for TestHelpers we need junit during normal compile...
-    implementation 'org.junit.jupiter:junit-jupiter-engine:5.11.0'
+    implementation 'org.junit.jupiter:junit-jupiter-engine:5.11.3'
 
     testImplementation 'org.apache.commons:commons-email:1.5'
     testImplementation 'com.sun.activation:javax.activation:1.2.0'     // needed for JDK 11
@@ -80,7 +80,7 @@ test {
 }
 
 jacoco {
-    toolVersion = '0.8.11'
+    toolVersion = '0.8.12'
 }
 
 jacocoTestReport {

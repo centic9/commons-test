@@ -35,7 +35,9 @@ public class MockRESTServerTest {
 
     @AfterEach
     void tearDown() throws InterruptedException {
-        ThreadTestHelper.waitForThreadToFinishSubstring("NanoHTTP");
+        ThreadTestHelper.waitForThreadToFinishSubstring("NanoHTTP", 10_000);
+
+        ThreadTestHelper.assertNoThreadLeft("Still had threads from NanoHTTP left", "NanoHTTP");
     }
 
     @Test

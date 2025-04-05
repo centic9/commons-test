@@ -132,7 +132,6 @@ public class MockRESTServer implements Closeable {
     private static int getNextFreePort() throws IOException {
         for (int port = PORT_RANGE_START; port < PORT_RANGE_END; port++) {
             try {
-                @SuppressWarnings("resource")
                 ServerSocket sock = new ServerSocket(port);
                 sock.close();
                 //

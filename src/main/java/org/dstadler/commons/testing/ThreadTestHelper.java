@@ -234,7 +234,7 @@ public class ThreadTestHelper {
 
 	/**
 	 * Wait for all threads with the specified name to finish, i.e. to not appear in the
-	 * list of running threads any more.
+	 * list of running threads anymore.
 	 *
 	 * @param name The exact name of the Thread to wait for.
 	 *
@@ -255,7 +255,7 @@ public class ThreadTestHelper {
 
 	/**
 	 * Wait for threads whose name contains the specified string to finish, i.e. to not appear in the
-	 * list of running threads any more.
+	 * list of running threads anymore.
 	 *
 	 * @param contains The string which is matched against thread-names via thread.getName().contains(name)
 	 *
@@ -267,7 +267,7 @@ public class ThreadTestHelper {
 
 	/**
 	 * Wait some time for threads whose name contains the specified string to finish, i.e. to not appear in the
-	 * list of running threads any more.
+	 * list of running threads anymore.
 	 *
 	 * @param contains The string which is matched against thread-names via thread.getName().contains(name)
 	 * @param timeout The number of milliseconds to wait for the thread to finish

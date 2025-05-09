@@ -40,9 +40,13 @@ It covers areas that I miss in JUnit itself e.g. for verifying compare()/hashCod
 
 ### Release it
 
-    ./gradlew --console=plain release && ./gradlew closeAndReleaseRepository
+Check version in `gradle.properties`
+
+    ./gradlew --console=plain https://github.com/SgtSilvio/gradle-maven-central-publishing
 
 * This should automatically release the new version on MavenCentral
+* Apply tag in Github
+* Increase version in `gradle.properties` afterwards
 * Afterwards go to the [Github releases page](https://github.com/centic9/commons-test/releases) and add release-notes
 
 ## Support this project

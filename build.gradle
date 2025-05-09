@@ -10,8 +10,8 @@ buildscript {
 plugins {
     id 'java-library'
     id 'maven-publish'
-    // https://github.com/researchgate/gradle-release
-    id 'net.researchgate.release' version '3.0.2'
+    // https://github.com/SgtSilvio/gradle-maven-central-publishing
+    id 'io.github.sgtsilvio.gradle.maven-central-publishing' version '0.4.0'
     id 'io.codearte.nexus-staging' version '0.30.0'
 
     // https://gradle-pitest-plugin.solidsoft.info/
@@ -68,7 +68,7 @@ dependencies {
 }
 
 wrapper {
-    gradleVersion = '8.5'
+    gradleVersion = '8.14'
 }
 
 test {
@@ -115,12 +115,6 @@ java {
     withSourcesJar()
 }
 
-release {
-    git {
-        requireBranch.set('master')
-    }
-}
-
 publishing {
     publications {
         mavenJava(MavenPublication) {
@@ -165,5 +159,3 @@ publishing {
 signing {
     sign publishing.publications.mavenJava
 }
-
-afterReleaseBuild.dependsOn publish

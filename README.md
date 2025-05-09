@@ -40,7 +40,7 @@ It covers areas that I miss in JUnit itself e.g. for verifying compare()/hashCod
 
 ### Release it
 
-Check version in `gradle.properties`
+* Check version in `gradle.properties`
 
     ./gradlew --console=plain https://github.com/SgtSilvio/gradle-maven-central-publishing
 

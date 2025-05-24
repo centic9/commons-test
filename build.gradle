@@ -28,7 +28,9 @@ java {
   }
 }
 group = 'org.dstadler'
-archivesBaseName = 'commons-test'
+base {
+    archivesName = 'commons-test'
+}
 
 repositories {
     mavenCentral()
@@ -122,7 +124,7 @@ java {
 publishing {
     publications {
         mavenJava(MavenPublication) {
-            artifactId = archivesBaseName
+            artifactId = 'commons-test'
             from components.java
 
             pom {

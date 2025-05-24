@@ -15,7 +15,7 @@ plugins {
     id 'io.codearte.nexus-staging' version '0.30.0'
 
     // https://gradle-pitest-plugin.solidsoft.info/
-    id 'info.solidsoft.pitest' version '1.9.11'
+    id 'info.solidsoft.pitest' version '1.15.0'
 }
 
 apply plugin: 'de.thetaphi.forbiddenapis'

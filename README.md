@@ -41,6 +41,7 @@ It covers areas that I miss in JUnit itself e.g. for verifying compare()/hashCod
 ### Release it
 
 * Check version in `gradle.properties`
+* Publish the binaries to Maven Central
 
     ./gradlew --console=plain publishToMavenCentral
 

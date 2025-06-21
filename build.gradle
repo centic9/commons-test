@@ -27,6 +27,7 @@ java {
 	  sourceCompatibility = JavaVersion.VERSION_17
   }
 }
+
 group = 'org.dstadler'
 base {
     archivesName = 'commons-test'

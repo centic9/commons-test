@@ -54,7 +54,7 @@ configurations {
 dependencies {
     implementation 'org.apache.commons:commons-lang3:3.18.0'
     implementation 'commons-io:commons-io:2.20.0'
-    implementation 'org.dstadler:commons-dost:1.4.2'
+    implementation 'org.dstadler:commons-dost:1.4.3'
 
     // dumbster is somewhat broken, but we use it in SafeCloseSmtpServer...
     // dumbster includes javax.mail-api 1.3.2, but this has no jar?!

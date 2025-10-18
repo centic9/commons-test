@@ -3,7 +3,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'de.thetaphi:forbiddenapis:3.9'
+        classpath 'de.thetaphi:forbiddenapis:3.10'
     }
 }
 
@@ -39,7 +39,7 @@ repositories {
 
 forbiddenApis {
     suppressAnnotations = ['org.dstadler.commons.util.SuppressForbidden']
-    bundledSignatures = [ 'jdk-reflection', 'commons-io-unsafe-2.18.0', 'jdk-internal' ]
+    bundledSignatures = [ 'jdk-reflection', 'commons-io-unsafe-2.19.0', 'jdk-internal' ]
 }
 forbiddenApisMain {
     // 'jdk-unsafe', 'jdk-system-out'
@@ -52,7 +52,7 @@ configurations {
 }
 
 dependencies {
-    implementation 'org.apache.commons:commons-lang3:3.18.0'
+    implementation 'org.apache.commons:commons-lang3:3.19.0'
     implementation 'commons-io:commons-io:2.20.0'
     implementation 'org.dstadler:commons-dost:1.4.3'
 
@@ -64,11 +64,11 @@ dependencies {
     api 'dumbster:dumbster:1.6'
 
     // for TestHelpers we need junit during normal compile...
-    implementation 'org.junit.jupiter:junit-jupiter-engine:5.13.4'
+    implementation 'org.junit.jupiter:junit-jupiter-engine:6.0.0'
 
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.13.4'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.13.4'
-    testRuntimeOnly 'org.junit.platform:junit-platform-launcher:1.13.4'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:6.0.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:6.0.0'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher:6.0.0'
 
     testImplementation 'org.apache.commons:commons-email:1.5'
     testImplementation 'com.sun.activation:javax.activation:1.2.0'     // needed for JDK 11
@@ -91,7 +91,7 @@ test {
 }
 
 jacoco {
-    toolVersion = '0.8.13'
+    toolVersion = '0.8.14'
 }
 
 jacocoTestReport {

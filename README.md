@@ -46,7 +46,7 @@ It covers areas that I miss in JUnit itself e.g. for verifying compare()/hashCod
     ./gradlew --console=plain publishToMavenCentral
 
 * This should automatically release the new version on MavenCentral
-* Apply tag in Github
+* Apply tag in Github (`git tag` && `git push --tags`)
 * Increase version in `gradle.properties` afterwards
 * Afterwards go to the [Github releases page](https://github.com/centic9/commons-test/releases) and add release-notes
 

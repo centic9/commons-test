@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.net.URL;
 import java.util.Comparator;
 import java.util.logging.Level;
@@ -102,10 +103,13 @@ public class TestHelpers {
 		// hashCode: equal objects should have equal hash code
 		assertTrue(obj.hashCode() == equal.hashCode(),
 				"Transitive: Equal objects should have equal hash-code in EqualsTest!");
-		assertTrue(obj.hashCode() == obj	// NOPMD
+        //noinspection ExpressionComparedToItself
+        assertTrue(obj.hashCode() == obj	// NOPMD
 				.hashCode(), "Transitive: Equal objects should have equal hash-code in EqualsTest!");
+        //noinspection ExpressionComparedToItself
 		assertTrue(equal.hashCode() == equal.hashCode(),
 				"Transitive: Equal objects should have equal hash-code in EqualsTest!");
+        //noinspection ExpressionComparedToItself
 		assertTrue(notequal.hashCode() == notequal.hashCode(),
 				"Transitive: Equal objects should have equal hash-code in EqualsTest!");
 	}
@@ -567,7 +571,7 @@ public class TestHelpers {
 	 * @throws IOException If an error occurs while contacting the given URL.
 	 */
 	public static void assertURLWorks(String urlString, int timeout) throws IOException {
-		URL url = new URL(urlString);
+		URL url = URI.create(urlString).toURL();
 
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         try {

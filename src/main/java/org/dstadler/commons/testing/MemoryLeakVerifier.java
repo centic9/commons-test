@@ -1,5 +1,7 @@
 package org.dstadler.commons.testing;
 
+import org.dstadler.commons.util.SuppressForbidden;
+
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.io.IOException;
@@ -81,6 +83,8 @@ public class MemoryLeakVerifier {
 		}
 	}
 
+    @SuppressWarnings("removal")
+    @SuppressForbidden(reason="Still allow calling finalization for now")
 	private static void assertGarbageCollected(WeakReference<Object> ref, int maxIterations, boolean dumpHeap) throws InterruptedException {
 		// exit early if the ref is already collected from before
 		if(ref.get() == null) {
